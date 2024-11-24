@@ -14,12 +14,20 @@ export interface WithOptionalSignal {
  * Options passed to the {@link FileWriter} {@linkcode FileWriter.writeTextToFile | writeTextToFile} method.
  */
 export interface WriteTextToFileOptions extends WithOptionalSignal {
+  /**
+   * File system permissions applied to the file, if it is created.
+   */
+  mode?: number;
 }
 
 /**
  * Options passed to the {@link FileWriter} {@linkcode FileWriter.writeBinaryToFile | writeBinaryToFile} method.
  */
 export interface WriteBinaryToFileOptions extends WithOptionalSignal {
+  /**
+   * File system permissions applied to the file, if it is created.
+   */
+  mode?: number;
 }
 
 /**
@@ -64,6 +72,10 @@ export interface FileWriter {
  * Options passed to the {@link DirectoryCreator} {@linkcode DirectoryCreator.createDirectory | createDirectory} method.
  */
 export interface DirectoryCreatorOptions extends WithOptionalSignal {
+  /**
+   * File system permissions applied to the directory, if the platform supports them (i.e., not on Windows).
+   */
+  mode?: number;
 }
 
 /**
@@ -131,6 +143,14 @@ export interface FileValueStorer {
  */
 export interface DirectoryObjectStorerOptions
   extends FileValueStorerOptions, DirectoryCreatorOptions {
+  /**
+   * If set to `true`, the directory object storer will throw an error if there is no storer to handle a specific
+   * (non-object) property.
+   *
+   * By default, the directory object storer uses itself to store any object-valued properties and ignores all
+   * non-objects that are not matched by value storers.
+   */
+  strict?: boolean;
 }
 
 /**

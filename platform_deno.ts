@@ -23,9 +23,9 @@ function denoWriteBinaryToFile(
 
 function denoCreateDirectory(
   directoryUrl: URL,
-  _options?: DirectoryCreatorOptions,
+  options?: DirectoryCreatorOptions,
 ): Promise<void> {
-  return Deno.mkdir(directoryUrl);
+  return Deno.mkdir(directoryUrl, options);
 }
 
 export function makeDenoPlatform(): Platform {

@@ -3,7 +3,7 @@ import { assertEquals, assertThrows } from "@std/assert";
 import {
   DirectoryEscapeError,
   DirectoryReference,
-} from "./directory-reference.ts";
+} from "./directory_reference.ts";
 
 test("Can create DirectoryReference instances", () => {
   const dr1 = new DirectoryReference(new URL("http://foo.bar"));

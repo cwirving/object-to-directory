@@ -8,7 +8,9 @@
     "jsr:@std/internal@^1.0.5": "1.0.5",
     "jsr:@std/path@*": "1.0.8",
     "jsr:@std/path@^1.0.8": "1.0.8",
-    "npm:@types/node@*": "22.5.4"
+    "npm:@types/node@*": "22.5.4",
+    "npm:@types/picomatch@^3.0.1": "3.0.1",
+    "npm:picomatch@^4.0.2": "4.0.2"
   },
   "jsr": {
     "@cross/runtime@1.1.0": {
@@ -40,6 +42,12 @@
         "undici-types"
       ]
     },
+    "@types/picomatch@3.0.1": {
+      "integrity": "sha512-1MRgzpzY0hOp9pW/kLRxeQhUWwil6gnrUYd3oEpeYBqp/FexhaCPv3F8LsYr47gtUU45fO2cm1dbwkSrHEo8Uw=="
+    },
+    "picomatch@4.0.2": {
+      "integrity": "sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg=="
+    },
     "undici-types@6.19.8": {
       "integrity": "sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw=="
     }
@@ -49,7 +57,9 @@
       "jsr:@cross/runtime@^1.1.0",
       "jsr:@cross/test@^0.0.9",
       "jsr:@std/assert@^1.0.4",
-      "jsr:@std/path@^1.0.8"
+      "jsr:@std/path@^1.0.8",
+      "npm:@types/picomatch@^3.0.1",
+      "npm:picomatch@^4.0.2"
     ]
   }
 }

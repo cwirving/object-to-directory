@@ -31,9 +31,9 @@ function nodeWriteBinaryToFile(
 
 function nodeCreateDirectory(
   directoryUrl: URL,
-  _options?: DirectoryCreatorOptions,
+  options?: DirectoryCreatorOptions,
 ): Promise<void> {
-  return fsPromises.mkdir(directoryUrl)
+  return fsPromises.mkdir(directoryUrl, options)
 
 }
 
