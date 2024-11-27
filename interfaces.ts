@@ -101,81 +101,77 @@ export interface DirectoryCreator {
 }
 
 /**
- * Options passed to the {@link FileValueStorer} {@linkcode FileValueStorer.storeValueToFile | storeValueToFile} method.
+ * Options passed to the {@link ValueStorageHandler} {@linkcode ValueStorageHandler.storeValueToFile | storeValueToFile} method.
  */
-export interface FileValueStorerOptions extends WriteTextToFileOptions, WriteBinaryToFileOptions {
-}
-
-/**
- * Interface of a file value storer.
- *
- * File value storers, as opposed to _writers_ encapsulate reading serialization and writing of a
- * value to the file system (or wherever the underlying writer persists to).
- *
- * While this library only contains storers for plain text, binary data and JSON files, consumers
- * can create their own storers for any format they choose.
- */
-export interface FileValueStorer {
+export interface ValueStorageHandlerOptions extends WriteTextToFileOptions, WriteBinaryToFileOptions {
   /**
-   * The name of the storer. For runtime debugging purposes.
-   */
-  readonly name: string;
-
-  /**
-   * Asynchronously store (serialize and write) the contents to the file at the specified URL. The
-   * exact serialization format depends on the implementation.
+   * If set to `true` and the value storage handler is able to detect lossy conditions (e.g., storing to a directory
+   * but there aren't enough value storage handlers for all properties), the value storage handler will reject with an
+   * error if a loss of data condition is detected.
    *
-   * @param fileUrl The URL of the file to write.
-   * @param value The value to serialize and write.
-   * @param options Options governing the behavior of the loader.
-   * @returns A promise to a JavaScript value. There are no magic values, any value including `undefined` is valid.
-   */
-  storeValueToFile(
-    fileUrl: URL,
-    value: unknown,
-    options?: Readonly<FileValueStorerOptions>,
-  ): Promise<void>;
-}
-
-
-/**
- * Options passed to the {@link DirectoryObjectStorer} {@linkcode DirectoryObjectLoader.loadObjectFromDirectory | loadValueFromFile} method.
- */
-export interface DirectoryObjectStorerOptions
-  extends FileValueStorerOptions, DirectoryCreatorOptions {
-  /**
-   * If set to `true`, the directory object storer will throw an error if there is no storer to handle a specific
-   * (non-object) property.
-   *
-   * By default, the directory object storer uses itself to store any object-valued properties and ignores all
-   * non-objects that are not matched by value storers.
+   * By default, storage is best-effort and values that aren't covered by handlers are ignored.
    */
   strict?: boolean;
 }
 
 /**
- * Interface of a directory object storer.
+ * Interface implemented by objects that can store values to files or directories.
  *
- * Directory object storers store the contents of a plain JavaScript object to an existing directory.
+ * Value storage handlers, as opposed to _writers_, encapsulate reading serialization and writing of a
+ * value to the file system (or wherever the underlying writer persists to). They also encapsulate
+ * the evaluation whether they can handle the value, so that the overall storage orchestration
+ * can query value storage handlers in order until one matches.
+ *
+ * This library only contains value storage handlers for plain text, binary data and JSON files,
+ * plus directories of files/directories. Consumers can create their own handlers for additional formats.
  */
-export interface DirectoryObjectStorer {
+export interface ValueStorageHandler {
   /**
    * The name of the storer. For runtime debugging purposes.
    */
   readonly name: string;
 
   /**
-   * Asynchronously write a plain JavaScript object to a directory specified by its URL.
-   * Does not delete the existing contents of the directory.
+   * Check whether this file value storer is able to store this value.
    *
-   * @param directoryPath The URL of the directory where the object contents will be stored.
-   * @param contents The object to write as directory contents.
-   * @param options Options to pass to the directory creator, file storers and file writers used during the operation.
-   * @returns A promise that resolves when the
+   * @param pathInSource The (slash-separated) path where the value is located in the original object.
+   * @param destinationUrl The URL of the file where the value would be written (without file extension).
+   * @param value
    */
-  storeObjectToDirectory(
-    directoryPath: URL,
-    contents: Record<string, unknown>,
-    options?: Readonly<DirectoryObjectStorerOptions>,
+  canStoreValue(
+    pathInSource: string,
+    destinationUrl: URL,
+    value: unknown): boolean;
+
+  /**
+   * Asynchronously store (serialize and write) the contents to the file system at the specified URL. The
+   * exact serialization format depends on the implementation.
+   *
+   * If the `ValueStorageHandler` is associated with a specific file extension, it will add the extension
+   * as it writes the file.
+   *
+   * @param pathInSource The (slash-separated) path where the value is located in the original object.
+   * @param destinationUrl The URL of the file to write (without file extension).
+   * @param value The value to serialize and write.
+   * @param options Options governing the behavior of the loader.
+   * @returns A promise to a JavaScript value. There are no magic values, any value including `undefined` is valid.
+   */
+  storeValue(
+    pathInSource: string,
+    destinationUrl: URL,
+    value: unknown,
+    options?: Readonly<ValueStorageHandlerOptions>,
   ): Promise<void>;
+}
+
+/**
+ * The specialization of {@linkcode ValueStorageHandler} for handlers that, themselves, have nested handlers.
+ */
+export interface ValueStorageHandlerWithHandlers extends ValueStorageHandler {
+  /**
+   * The nested handlers inside this one. The array can be manipulated to add/remove handlers.
+   *
+   * They should not be modified while this handler is storing a value.
+   */
+  readonly handlers: ValueStorageHandler[];
 }

@@ -1,15 +1,11 @@
 import type {
   DirectoryCreator,
-  DirectoryObjectStorer,
-  DirectoryObjectStorerOptions,
-  FileValueStorer,
-  FileValueStorerOptions,
+  ValueStorageHandler,
+  ValueStorageHandlerOptions,
   FileWriter,
 } from "./interfaces.ts";
 import { platform } from "./platform.ts";
-import { DirectoryReference } from "./directory_reference.ts";
-import { compileStorers, storeObjectToDirectoryEx } from './directory_storer.ts';
-import { mergeOptions } from "./merge_utilities.ts";
+import { DirectoryValueStorageHandler } from './directory_storer.ts';
 
 /**
  * Create a new file writer appropriate for writing local files on the current platform.
@@ -18,7 +14,7 @@ import { mergeOptions } from "./merge_utilities.ts";
  *
  * @returns An object implementing the {@linkcode FileWriter} interface.
  */
-export function newFileReader(): FileWriter {
+export function newFileWriter(): FileWriter {
   return platform.fileWriter;
 }
 
@@ -27,51 +23,66 @@ export function newFileReader(): FileWriter {
  *
  * @returns An object implementing the {@linkcode DirectoryCreator} interface.
  */
-export function newDirectoryContentsReader(): DirectoryCreator {
+export function newDirectoryCreator(): DirectoryCreator {
   return platform.directoryCreator;
 }
 
 /**
- * Create a new writer for plain text files, using the provided file text wtiter.
+ * Create a new value storage handler for plain text files, using the provided file writer.
  *
  * @param textWriter The file text reader to perform the physical file writing.
- * @returns An object implementing the {@linkcode FileValueStorer} interface that performs plain text file writing. If
+ * @param extension The file name extension (including the dot) to add to the path of the URL when writing files. Defaults to ".txt".
+ * @returns An object implementing the {@linkcode ValueStorageHandler} interface that performs plain text file writing. If
  */
-export function newTextFileValueStorer(
+export function newTextFileValueStorageHandler(
   textWriter: FileWriter,
-): FileValueStorer {
+  extension: string = ".txt",
+): ValueStorageHandler {
   return Object.freeze({
-    name: "Text file value storer",
-    storeValueToFile: (
-      fileUrl: URL,
+    name: "Text file value storage handler",
+    canStoreValue(_pathInSource: string, _destinationUrl: URL, value: unknown): boolean {
+      return typeof value === "string";
+    },
+    storeValue: (
+      _pathInSource: string,
+      destinationUrl: URL,
       value: unknown,
-      options?: Readonly<FileValueStorerOptions>,
+      options?: Readonly<ValueStorageHandlerOptions>,
     ) => {
       options?.signal?.throwIfAborted();
 
-      return textWriter.writeTextToFile(fileUrl, String(value), options);
+      const urlWithExtension = new URL(destinationUrl);
+      urlWithExtension.pathname += extension;
+
+      return textWriter.writeTextToFile(urlWithExtension, value as string, options);
     },
   });
 }
 
 /**
- * Create a new storer for (opaque) binary files, using the provided file writer.
+ * Create a new value storage handler for (opaque) binary files, using the provided file writer.
  *
- * The storer will write Uint8Array, ArrayBuffer and ArrayBufferView instances directly.
+ * The handler will write Uint8Array, ArrayBuffer and ArrayBufferView instances directly.
  * Every other value type will be converted to a string and written out in UTF-8 encoding.
  *
  * @param binaryWriter The binary file wtiter used to perform the physical file writing.
- * @returns An object implementing the {@linkcode FileValueStorer} interface.
+ * @param extension The file name extension (including the dot) to add to the path of the URL when writing files. Defaults to ".bin".
+ * @returns An object implementing the {@linkcode ValueStorageHandler} interface.
  */
 export function newBinaryFileValueLoader(
   binaryWriter: FileWriter,
-): FileValueStorer {
+  extension: string = ".bin",
+): ValueStorageHandler {
   return Object.freeze({
-    name: "Binary file value storer",
-    storeValueToFile: (
-      fileUrl: URL,
+    name: "Binary file value storage handler",
+    canStoreValue(_pathInSource: string, _destinationUrl: URL, _value: unknown): boolean {
+      return true;
+    },
+    storeValue: (
+      _pathInSource: string,
+      destinationUrl: URL,
       value: unknown,
-      options?: FileValueStorerOptions,
+      options?: ValueStorageHandlerOptions,
     ) => {
       options?.signal?.throwIfAborted();
 
@@ -90,13 +101,16 @@ export function newBinaryFileValueLoader(
         buffer = new TextEncoder().encode(String(value));
       }
 
-      return binaryWriter.writeBinaryToFile(fileUrl, buffer, options);
+      const urlWithExtension = new URL(destinationUrl);
+      urlWithExtension.pathname += extension;
+
+      return binaryWriter.writeBinaryToFile(urlWithExtension, buffer, options);
     },
   });
 }
 
 /**
- * The signature expected of string serializer functions passed to {@linkcode newStringSerializerFileValueStorer} function.
+ * The signature expected of string serializer functions passed to {@linkcode newStringSerializerValueStorageHandler} function.
  */
 export type StringifyFunc = (input: unknown) => string;
 
@@ -105,70 +119,68 @@ export type StringifyFunc = (input: unknown) => string;
  *
  * @param textWriter The underlying text file reader used to perform the physical file reading.
  * @param serializer The string parser function applied to the string loaded by the text file reader.
+ * @param extension The extension to add to file name when saving it.
  * @param name The name to give the resulting file value loader.
- * @returns An object implementing the {@linkcode FileValueStorer} interface.
+ * @returns An object implementing the {@linkcode ValueStorageHandler} interface.
  */
-export function newStringSerializerFileValueStorer(
+export function newStringSerializerValueStorageHandler(
   textWriter: FileWriter,
   serializer: StringifyFunc,
+  extension: string,
   name: string,
-): FileValueStorer {
+): ValueStorageHandler {
   return Object.freeze({
     name: name,
-    storeValueToFile: (
-      fileUrl: URL,
+    canStoreValue(_pathInSource: string, _destinationUrl: URL, _value: unknown): boolean {
+      return true;
+    },
+    storeValue: (
+      _pathInSource: string,
+      destinationUrl: URL,
       value: unknown,
-      options?: FileValueStorerOptions,
+      options?: ValueStorageHandlerOptions,
     ) => {
       options?.signal?.throwIfAborted();
 
       const text = serializer(value);
-      return textWriter.writeTextToFile(fileUrl, text, options);
+
+      const urlWithExtension = new URL(destinationUrl);
+      urlWithExtension.pathname += extension;
+
+      return textWriter.writeTextToFile(urlWithExtension, text, options);
     },
   });
 }
 
 /**
- * Create a new JSON file value storer with the provided text file writer.
+ * Create a new JSON file value storage handler with the provided text file writer.
  *
  * @param textWriter The underlying text file reader used to perform physical file reading.
- * @returns An object implementing the {@linkcode FileValueStorer} interface which reads and parses JSON files.
+ * @returns An object implementing the {@linkcode ValueStorageHandler} interface which reads and parses JSON files.
  */
-export function newJsonFileValueStorer(
+export function newJsonValueStorageHandler(
   textWriter: FileWriter,
-): FileValueStorer {
-  return newStringSerializerFileValueStorer(
+): ValueStorageHandler {
+  return newStringSerializerValueStorageHandler(
     textWriter,
     JSON.stringify,
-    "JSON file value storer",
+    ".json",
+    "JSON file value storage handler",
   );
 }
 
-export function newDirectoryObjectStorer(
-  storers: Iterable<Readonly<[string, FileValueStorer]>>,
+export function newDirectoryObjectStorageHandler(
+  handlers: Iterable<ValueStorageHandler>,
+  directoryCreator?: DirectoryCreator,
   name?: string,
-  defaultOptions?: Readonly<DirectoryObjectStorerOptions>,
-): DirectoryObjectStorer {
-  const handlers = compileStorers(storers);
+  defaultOptions?: Readonly<ValueStorageHandlerOptions>,
+): ValueStorageHandler {
 
-  return Object.freeze({
-    name: name ?? "Generic object to directory storer",
-    _storers: storers, // Not used. Just present to make code easier to debug.
-    _defaultOptions: defaultOptions, // Not used. Just present to make code easier to debug.
-    storeObjectToDirectory(
-      directoryPath: URL,
-      contents: Record<string, unknown>,
-      options?: Readonly<DirectoryObjectStorerOptions>,
-    ): Promise<void> {
-      const mergedOptions = mergeOptions(defaultOptions, options);
+  const handlersCopy = Array.from(handlers);
 
-      return storeObjectToDirectoryEx({
-        destinationUrl: directoryPath,
-        currentPathInSource: "",
-        contents: contents,
-        handlers: handlers,
-        options: mergedOptions,
-      });
-    },
-  });
+  if(!directoryCreator) {
+    directoryCreator = newDirectoryCreator();
+  }
+
+  return new DirectoryValueStorageHandler(name ?? "Directory value storage handler", handlersCopy, directoryCreator, defaultOptions);
 }

@@ -1,123 +1,72 @@
-import { DirectoryReference } from "./directory_reference.ts";
-import type {
-  DirectoryObjectStorerOptions,
-  FileValueStorer,
-} from "./interfaces.ts";
-import { default as picomatch } from "picomatch";
-import { isObject } from "./merge_utilities.ts";
+import { DirectoryReference } from './directory_reference.ts';
+import type { DirectoryCreator, ValueStorageHandler, ValueStorageHandlerOptions, ValueStorageHandlerWithHandlers } from './interfaces.ts';
+import { isObject, mergeOptions } from './merge_utilities.ts';
 
-const dummyUrl = new URL("http://placeholder");
+export class DirectoryValueStorageHandler implements ValueStorageHandlerWithHandlers {
+  readonly #name: string;
+  readonly #handlers: ValueStorageHandler[];
+  readonly #directoryCreator: DirectoryCreator;
+  readonly #defaultOptions: Readonly<ValueStorageHandlerOptions> | undefined;
 
-/**
- * A handler that decides whether to store the contents of the state passed in or not.
- *
- * If it does store it, returns a promise. If it does not store it, returns `undefined`.
- */
-export type DirectoryEntryHandler = (
-  state: StoreObjectToDirectoryExState,
-) => Promise<void> | undefined;
-
-/**
- * The state representing a value to potentially store.
- */
-export interface StoreObjectToDirectoryExState {
-  /**
-   * The location in the file system where the object would be written.
-   */
-  destinationUrl: URL;
-
-  /**
-   * The path in the source object where the contents can be found.
-   * The path elements are separated by slashes ("/") and any slashes in property values are replaced with "%2F".
-   */
-  currentPathInSource: string;
-
-  /**
-   * The contents to store.
-   */
-  contents: unknown;
-
-  /**
-   * The currently applicable handlers.
-   */
-  handlers: DirectoryEntryHandler[];
-
-  /**
-   * Options to pass to storers.
-   */
-  options?: DirectoryObjectStorerOptions;
-}
-
-/**
- * Compile storer matching expressions into an array of handlers to apply sequentially until one of them succeeds.
- *
- * @param storers
- */
-export function compileStorers(
-  storers: Iterable<Readonly<[string, FileValueStorer]>>,
-): DirectoryEntryHandler[] {
-  const handlers: DirectoryEntryHandler[] = [];
-
-  // Compile all the matching expressions we were given.
-  for (const [key, value] of storers) {
-    const isMatch = picomatch(key);
-    handlers.push((state: StoreObjectToDirectoryExState) =>
-      (isMatch(state.currentPathInSource))
-        ? value.storeValueToFile(
-          state.destinationUrl,
-          state.contents,
-          state.options,
-        )
-        : undefined
-    );
+  constructor(
+    name: string,
+    handlers: ValueStorageHandler[],
+    directoryCreator: DirectoryCreator,
+    defaultOptions?: Readonly<ValueStorageHandlerOptions>,
+  ) {
+    this.#name = name;
+    this.#handlers = handlers;
+    this.#directoryCreator = directoryCreator;
+    this.#defaultOptions = defaultOptions;
   }
 
-  // Add a final default handler for directories
-  handlers.push((state: StoreObjectToDirectoryExState) =>
-    isObject(state.contents) ? storeObjectToDirectoryEx(state) : undefined
-  );
-
-  return handlers;
-}
-
-export async function storeObjectToDirectoryEx(
-  state: StoreObjectToDirectoryExState,
-): Promise<void> {
-  state.options?.signal?.throwIfAborted();
-
-  const directoryReference = new DirectoryReference(state.destinationUrl);
-
-  if(!isObject(state.contents)) {
-    throw new TypeError("storeObjectToDirectoryEx called with non-object contents");
+  get name(): string {
+    return this.#name;
   }
 
-  const nestedState: StoreObjectToDirectoryExState = {
-    handlers: state.handlers,
-    options: state.options,
+  get handlers(): ValueStorageHandler[] {
+    return this.#handlers;
+  }
 
-    // placeholders
-    destinationUrl: dummyUrl,
-    currentPathInSource: "",
-    contents: undefined
-  };
+  canStoreValue(_pathInSource: string, _destinationUrl: URL, value: unknown): boolean {
+    return isObject(value);
+  }
 
-  for (const [key, value] of Object.entries(state.contents)) {
-    nestedState.destinationUrl = directoryReference.getContentsUrl(key); // TODO: use a mapping function.
-    nestedState.currentPathInSource = `${state.currentPathInSource}/${key.replace("/", "%2F")}`;
-    nestedState.contents = value;
-
-    let handledPromise: Promise<void> | undefined = undefined;
-    for (const handler of state.handlers) {
-      handledPromise = handler(state);
-      if (handledPromise) break;
+  async storeValue(pathInSource: string, destinationUrl: URL, value: unknown, options?: Readonly<ValueStorageHandlerOptions>): Promise<void> {
+    if(!isObject(value)) {
+      throw new TypeError(`Attempting to store non-object value at path "${pathInSource}" as a directory.`);
     }
 
-    await handledPromise;
+    const directoryReference = new DirectoryReference(destinationUrl);
+    const mergedOptions = mergeOptions(this.#defaultOptions, options);
 
-    if (!handledPromise && state.options?.strict) {
-      throw new Error(
-        `Could not store item at path "${state.currentPathInSource}" -- no storer matches it`,
-      );
+    // First things first, let's make sure the destination directory is created...
+    await this.#directoryCreator.createDirectory(directoryReference.canonicalUrl);
+
+    for(const [nestedKey, nestedValue] of Object.entries(value)){
+      const nestedPathInSource = `${pathInSource}/${nestedKey.replace("/", "%2F")}`;
+      const nestedDestinationUrl = directoryReference.getContentsUrl(nestedKey); // TODO: use a mapping function.
+      let stored = false;
+
+      for(const candidateHandler of this.#handlers) {
+        if(candidateHandler.canStoreValue(nestedPathInSource, nestedDestinationUrl, nestedValue)) {
+          await candidateHandler.storeValue(nestedPathInSource, nestedDestinationUrl, nestedValue, mergedOptions);
+          stored = true;
+          break;
+        }
+      }
+
+      if(!stored) {
+        if(this.canStoreValue(nestedPathInSource, nestedDestinationUrl, nestedValue)) {
+          await this.storeValue(nestedPathInSource, nestedDestinationUrl, nestedValue, mergedOptions);
+        }else{
+          if(mergedOptions?.strict) {
+            throw new Error(
+              `Could not store value at path "${nestedPathInSource}" -- no storage handler matches it`,
+            );
+          }
+        }
+      }
     }
   }
 }
