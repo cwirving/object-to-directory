@@ -1,5 +1,8 @@
-import type { ValueStorageHandlerOptions, ValueStorageHandler } from './interfaces.ts';
-import { newDirectoryObjectStorageHandler } from './factories.ts';
+import type {
+  ValueStorageHandler,
+  ValueStorageHandlerOptions,
+} from "./interfaces.ts";
+import { newDirectoryObjectStorageHandler } from "./factories.ts";
 
 /**
  * Convenience wrapper around `newDirectoryObjectStorageHandler` and `storeValue`.
@@ -17,5 +20,5 @@ export function storeObjectToDirectory(
 ): Promise<void> {
   const handler = newDirectoryObjectStorageHandler(handlers);
 
-  return handler.storeValue("", destinationUrl, value, options)
+  return handler.storeValue("", destinationUrl, value, options);
 }

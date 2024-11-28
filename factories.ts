@@ -1,11 +1,12 @@
 import type {
   DirectoryCreator,
+  FileWriter,
   ValueStorageHandler,
   ValueStorageHandlerOptions,
-  FileWriter,
 } from "./interfaces.ts";
 import { platform } from "./platform.ts";
-import { DirectoryValueStorageHandler } from './directory_storer.ts';
+import { DirectoryValueStorageHandler } from "./directory_storer.ts";
+import { FluentValueStorageHandler } from "./fluent_handlers.ts";
 
 /**
  * Create a new file writer appropriate for writing local files on the current platform.
@@ -37,10 +38,14 @@ export function newDirectoryCreator(): DirectoryCreator {
 export function newTextFileValueStorageHandler(
   textWriter: FileWriter,
   extension: string = ".txt",
-): ValueStorageHandler {
-  return Object.freeze({
+): Readonly<FluentValueStorageHandler> {
+  return FluentValueStorageHandler.newHandler({
     name: "Text file value storage handler",
-    canStoreValue(_pathInSource: string, _destinationUrl: URL, value: unknown): boolean {
+    canStoreValue(
+      _pathInSource: string,
+      _destinationUrl: URL,
+      value: unknown,
+    ): boolean {
       return typeof value === "string";
     },
     storeValue: (
@@ -54,7 +59,11 @@ export function newTextFileValueStorageHandler(
       const urlWithExtension = new URL(destinationUrl);
       urlWithExtension.pathname += extension;
 
-      return textWriter.writeTextToFile(urlWithExtension, value as string, options);
+      return textWriter.writeTextToFile(
+        urlWithExtension,
+        value as string,
+        options,
+      );
     },
   });
 }
@@ -72,10 +81,14 @@ export function newTextFileValueStorageHandler(
 export function newBinaryFileValueLoader(
   binaryWriter: FileWriter,
   extension: string = ".bin",
-): ValueStorageHandler {
-  return Object.freeze({
+): Readonly<FluentValueStorageHandler> {
+  return FluentValueStorageHandler.newHandler({
     name: "Binary file value storage handler",
-    canStoreValue(_pathInSource: string, _destinationUrl: URL, _value: unknown): boolean {
+    canStoreValue(
+      _pathInSource: string,
+      _destinationUrl: URL,
+      _value: unknown,
+    ): boolean {
       return true;
     },
     storeValue: (
@@ -128,10 +141,14 @@ export function newStringSerializerValueStorageHandler(
   serializer: StringifyFunc,
   extension: string,
   name: string,
-): ValueStorageHandler {
-  return Object.freeze({
+): Readonly<FluentValueStorageHandler> {
+  return FluentValueStorageHandler.newHandler({
     name: name,
-    canStoreValue(_pathInSource: string, _destinationUrl: URL, _value: unknown): boolean {
+    canStoreValue(
+      _pathInSource: string,
+      _destinationUrl: URL,
+      _value: unknown,
+    ): boolean {
       return true;
     },
     storeValue: (
@@ -174,13 +191,19 @@ export function newDirectoryObjectStorageHandler(
   directoryCreator?: DirectoryCreator,
   name?: string,
   defaultOptions?: Readonly<ValueStorageHandlerOptions>,
-): ValueStorageHandler {
-
+): Readonly<FluentValueStorageHandler> {
   const handlersCopy = Array.from(handlers);
 
-  if(!directoryCreator) {
+  if (!directoryCreator) {
     directoryCreator = newDirectoryCreator();
   }
 
-  return new DirectoryValueStorageHandler(name ?? "Directory value storage handler", handlersCopy, directoryCreator, defaultOptions);
+  return FluentValueStorageHandler.newHandler(
+    new DirectoryValueStorageHandler(
+      name ?? "Directory value storage handler",
+      handlersCopy,
+      directoryCreator,
+      defaultOptions,
+    ),
+  );
 }

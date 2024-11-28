@@ -52,7 +52,10 @@ test("DirectoryReference getContentsUrl() behaves as expected for normal inputs"
 
   // We don't prevent directory escape attempts that end up back in the same directory.
   const dr6 = new DirectoryReference(new URL("file:///foo//bar//baz//"));
-  assertEquals(dr6.getContentsUrl("../../../foo/bar/baz/z").href, "file:///foo/bar/baz/z");
+  assertEquals(
+    dr6.getContentsUrl("../../../foo/bar/baz/z").href,
+    "file:///foo/bar/baz/z",
+  );
 });
 
 test("DirectoryReference getContentsUrl() detects directory escapes", () => {

@@ -25,7 +25,9 @@ export function mergeOptions<T extends object>(
   return mergedOptions;
 }
 
-
-export function isObject(candidate: unknown): candidate is Record<string, unknown> {
-  return typeof (candidate === "object") && (candidate !== null) && !Array.isArray(candidate);
+export function isObject(
+  candidate: unknown,
+): candidate is Record<string, unknown> {
+  return typeof (candidate === "object") && (candidate !== null) &&
+    !Array.isArray(candidate);
 }

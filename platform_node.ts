@@ -15,7 +15,7 @@ function nodeWriteTextToFile(
   return fsPromises.writeFile(path, contents, {
     encoding: "utf-8",
     signal: (options as Abortable | undefined)?.signal,
-  })
+  });
 }
 
 function nodeWriteBinaryToFile(
@@ -26,15 +26,14 @@ function nodeWriteBinaryToFile(
   return fsPromises.writeFile(path, contents, {
     encoding: null,
     signal: (options as Abortable | undefined)?.signal,
-  })
+  });
 }
 
-function nodeCreateDirectory(
+async function nodeCreateDirectory(
   directoryUrl: URL,
   options?: DirectoryCreatorOptions,
 ): Promise<void> {
-  return fsPromises.mkdir(directoryUrl, options)
-
+  await fsPromises.mkdir(directoryUrl, options);
 }
 
 export function makeNodePlatform(): Platform {

@@ -73,6 +73,11 @@ export interface FileWriter {
  */
 export interface DirectoryCreatorOptions extends WithOptionalSignal {
   /**
+   * If true, any intermediate parent directories that need to be created, will also be.
+   */
+  recursive?: boolean;
+
+  /**
    * File system permissions applied to the directory, if the platform supports them (i.e., not on Windows).
    */
   mode?: number;
@@ -103,7 +108,8 @@ export interface DirectoryCreator {
 /**
  * Options passed to the {@link ValueStorageHandler} {@linkcode ValueStorageHandler.storeValueToFile | storeValueToFile} method.
  */
-export interface ValueStorageHandlerOptions extends WriteTextToFileOptions, WriteBinaryToFileOptions {
+export interface ValueStorageHandlerOptions
+  extends WriteTextToFileOptions, WriteBinaryToFileOptions {
   /**
    * If set to `true` and the value storage handler is able to detect lossy conditions (e.g., storing to a directory
    * but there aren't enough value storage handlers for all properties), the value storage handler will reject with an
@@ -141,7 +147,8 @@ export interface ValueStorageHandler {
   canStoreValue(
     pathInSource: string,
     destinationUrl: URL,
-    value: unknown): boolean;
+    value: unknown,
+  ): boolean;
 
   /**
    * Asynchronously store (serialize and write) the contents to the file system at the specified URL. The
