@@ -182,3 +182,27 @@ export interface ValueStorageHandlerWithHandlers extends ValueStorageHandler {
    */
   readonly handlers: ValueStorageHandler[];
 }
+
+export interface FluentHandler<THandler> {
+  withName(name: string): THandler & FluentHandler<THandler>;
+
+  whenPathMatches(pattern: string): THandler & FluentHandler<THandler>;
+
+  whenPathMatchesSome(patterns: string[]): THandler & FluentHandler<THandler>;
+
+  whenIsTypeOf(
+    type:
+      | "string"
+      | "number"
+      | "bigint"
+      | "boolean"
+      | "symbol"
+      | "undefined"
+      | "object"
+      | "function",
+  ): THandler & FluentHandler<THandler>;
+
+  whenIsInstanceOf(
+    classConstructor: new () => unknown,
+  ): THandler & FluentHandler<THandler>;
+}

@@ -1,12 +1,17 @@
 import type {
   DirectoryCreator,
   FileWriter,
+  FluentHandler,
   ValueStorageHandler,
   ValueStorageHandlerOptions,
+  ValueStorageHandlerWithHandlers,
 } from "./interfaces.ts";
 import { platform } from "./platform.ts";
 import { DirectoryValueStorageHandler } from "./directory_storer.ts";
-import { FluentValueStorageHandler } from "./fluent_handlers.ts";
+import {
+  FluentValueStorageHandler,
+  FluentValueStorageHandlerWithHandlers,
+} from "./fluent_handlers.ts";
 
 /**
  * Create a new file writer appropriate for writing local files on the current platform.
@@ -38,7 +43,7 @@ export function newDirectoryCreator(): DirectoryCreator {
 export function newTextFileValueStorageHandler(
   textWriter: FileWriter,
   extension: string = ".txt",
-): Readonly<FluentValueStorageHandler> {
+): ValueStorageHandler & FluentHandler<ValueStorageHandler> {
   return FluentValueStorageHandler.newHandler({
     name: "Text file value storage handler",
     canStoreValue(
@@ -81,7 +86,7 @@ export function newTextFileValueStorageHandler(
 export function newBinaryFileValueLoader(
   binaryWriter: FileWriter,
   extension: string = ".bin",
-): Readonly<FluentValueStorageHandler> {
+): ValueStorageHandler & FluentHandler<ValueStorageHandler> {
   return FluentValueStorageHandler.newHandler({
     name: "Binary file value storage handler",
     canStoreValue(
@@ -141,7 +146,7 @@ export function newStringSerializerValueStorageHandler(
   serializer: StringifyFunc,
   extension: string,
   name: string,
-): Readonly<FluentValueStorageHandler> {
+): ValueStorageHandler & FluentHandler<ValueStorageHandler> {
   return FluentValueStorageHandler.newHandler({
     name: name,
     canStoreValue(
@@ -191,14 +196,16 @@ export function newDirectoryObjectStorageHandler(
   directoryCreator?: DirectoryCreator,
   name?: string,
   defaultOptions?: Readonly<ValueStorageHandlerOptions>,
-): Readonly<FluentValueStorageHandler> {
+):
+  & ValueStorageHandlerWithHandlers
+  & FluentHandler<ValueStorageHandlerWithHandlers> {
   const handlersCopy = Array.from(handlers);
 
   if (!directoryCreator) {
     directoryCreator = newDirectoryCreator();
   }
 
-  return FluentValueStorageHandler.newHandler(
+  return FluentValueStorageHandlerWithHandlers.newHandler(
     new DirectoryValueStorageHandler(
       name ?? "Directory value storage handler",
       handlersCopy,
