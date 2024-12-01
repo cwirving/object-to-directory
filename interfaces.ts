@@ -183,13 +183,40 @@ export interface ValueStorageHandlerWithHandlers extends ValueStorageHandler {
   readonly handlers: ValueStorageHandler[];
 }
 
+/**
+ * Additional fluent functionality implemented by or on top of value storage handlers.
+ */
 export interface FluentHandler<THandler> {
+  /**
+   * Give the handler a name.
+   *
+   * @param name The new name for the handler.
+   * @returns A new handler with the same behavior but with the new name.
+   */
   withName(name: string): THandler & FluentHandler<THandler>;
 
+  /**
+   * Add a pattern-based path match pattern.
+   *
+   * @param pattern The path matching pattern to add.
+   * @returns A new handler with the existing behavior plus the additional path matching requirement.
+   */
   whenPathMatches(pattern: string): THandler & FluentHandler<THandler>;
 
+  /**
+   * Add pattern-based path matching: the path in the source must match at least one of these patterns.
+   *
+   * @param patterns An array of path matching patterns to match -- at least one pattern must match.
+   * @returns A new handler with the existing behavior plus the additional path matching requirement.
+   */
   whenPathMatchesSome(patterns: string[]): THandler & FluentHandler<THandler>;
 
+  /**
+   * Add coarse JavaScript type matching using the `typeof` operator. The handler only can store values whose
+   * type matches the argument.
+   *
+   * @param type The JavaScript type name that values must satisfy.
+   * @returns A new handler with the existing behavior plus the additional type matching requirement.   */
   whenIsTypeOf(
     type:
       | "string"
@@ -202,6 +229,13 @@ export interface FluentHandler<THandler> {
       | "function",
   ): THandler & FluentHandler<THandler>;
 
+  /**
+   * Add class instance  matching using the `instanceof` operator. The handler only can store values
+   * that are instances of the provided class (constructor).
+   *
+   * @param classConstructor The class (constructor) to match.
+   * @returns A new handler with the existing behavior plus the additional class instance matching requirement.
+   */
   whenIsInstanceOf(
     classConstructor: new () => unknown,
   ): THandler & FluentHandler<THandler>;

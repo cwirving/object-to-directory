@@ -41,7 +41,7 @@ export abstract class AbstractFluentValueStorageHandler<
   }
 
   get name(): string {
-    return this.#innerHandler.name;
+    return this.#name;
   }
 
   canStoreValue(
@@ -156,7 +156,7 @@ export class FluentValueStorageHandlerWithHandlers
   readonly handlers: ValueStorageHandler[] = [];
 
   static newHandler(
-    handler: ValueStorageHandler,
+    handler: ValueStorageHandlerWithHandlers,
     nameOrCondition?: string | conditionFn,
   ):
     & ValueStorageHandlerWithHandlers
@@ -167,7 +167,7 @@ export class FluentValueStorageHandlerWithHandlers
   }
 
   protected override newInnerHandler(
-    handler: ValueStorageHandler,
+    handler: ValueStorageHandlerWithHandlers,
     nameOrCondition?: string | conditionFn,
   ):
     & ValueStorageHandlerWithHandlers
@@ -178,7 +178,7 @@ export class FluentValueStorageHandlerWithHandlers
   }
 
   protected constructor(
-    handler: ValueStorageHandler,
+    handler: ValueStorageHandlerWithHandlers,
     nameOrCondition?: string | conditionFn,
   ) {
     super(handler, nameOrCondition);
