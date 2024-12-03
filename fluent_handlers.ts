@@ -2,9 +2,8 @@ import type {
   FluentHandler,
   ValueStorageHandler,
   ValueStorageHandlerOptions,
-  ValueStorageHandlerWithHandlers,
 } from "./interfaces.ts";
-import { default as picomatch } from "picomatch";
+import picomatch from "picomatch";
 
 type conditionFn = (
   pathInSource: string,
@@ -12,17 +11,10 @@ type conditionFn = (
   value: unknown,
 ) => boolean;
 
-export abstract class AbstractFluentValueStorageHandler<
-  THandler extends ValueStorageHandler,
-> implements ValueStorageHandler, FluentHandler<THandler> {
+export class FluentValueStorageHandler implements FluentHandler {
   readonly #innerHandler: ValueStorageHandler;
   readonly #name: string;
   readonly #condition: conditionFn;
-
-  protected abstract newInnerHandler(
-    handler: ValueStorageHandler,
-    nameOrCondition?: string | conditionFn,
-  ): THandler & FluentHandler<THandler>;
 
   protected constructor(
     handler: ValueStorageHandler,
@@ -38,6 +30,15 @@ export abstract class AbstractFluentValueStorageHandler<
     this.#condition = condition ??
       ((pathInSource: string, destinationUrl: URL, value: unknown) =>
         handler.canStoreValue(pathInSource, destinationUrl, value));
+  }
+
+  static newHandler(
+    handler: ValueStorageHandler,
+    nameOrCondition?: string | conditionFn,
+  ): FluentHandler {
+    return Object.freeze(
+      new FluentValueStorageHandler(handler, nameOrCondition),
+    );
   }
 
   get name(): string {
@@ -66,14 +67,14 @@ export abstract class AbstractFluentValueStorageHandler<
     );
   }
 
-  withName(name: string): THandler & FluentHandler<THandler> {
-    return this.newInnerHandler(this, name);
+  withName(name: string): FluentHandler {
+    return FluentValueStorageHandler.newHandler(this, name);
   }
 
-  whenPathMatches(pattern: string): THandler & FluentHandler<THandler> {
+  whenPathMatches(pattern: string): FluentHandler {
     const matcher = picomatch(pattern);
 
-    return this.newInnerHandler(
+    return FluentValueStorageHandler.newHandler(
       this,
       (pathInSource: string, destinationUrl: URL, value: unknown) =>
         matcher(pathInSource) &&
@@ -81,10 +82,21 @@ export abstract class AbstractFluentValueStorageHandler<
     );
   }
 
-  whenPathMatchesSome(patterns: string[]): THandler & FluentHandler<THandler> {
+  whenPathMatchesEvery(patterns: string[]): FluentHandler {
     const matchers = patterns.map((p) => picomatch(p));
 
-    return this.newInnerHandler(
+    return FluentValueStorageHandler.newHandler(
+      this,
+      (pathInSource: string, destinationUrl: URL, value: unknown) =>
+        matchers.every((m) => m(pathInSource)) &&
+        this.canStoreValue(pathInSource, destinationUrl, value),
+    );
+  }
+
+  whenPathMatchesSome(patterns: string[]): FluentHandler {
+    const matchers = patterns.map((p) => picomatch(p));
+
+    return FluentValueStorageHandler.newHandler(
       this,
       (pathInSource: string, destinationUrl: URL, value: unknown) =>
         matchers.some((m) => m(pathInSource)) &&
@@ -102,8 +114,8 @@ export abstract class AbstractFluentValueStorageHandler<
       | "undefined"
       | "object"
       | "function",
-  ): THandler & FluentHandler<THandler> {
-    return this.newInnerHandler(
+  ): FluentHandler {
+    return FluentValueStorageHandler.newHandler(
       this,
       (pathInSource: string, destinationUrl: URL, value: unknown) =>
         (typeof value === type) &&
@@ -112,75 +124,13 @@ export abstract class AbstractFluentValueStorageHandler<
   }
 
   whenIsInstanceOf(
-    classConstructor: new () => unknown,
-  ): THandler & FluentHandler<THandler> {
-    return this.newInnerHandler(
+    classConstructor: new (..._: unknown[]) => unknown,
+  ): FluentHandler {
+    return FluentValueStorageHandler.newHandler(
       this,
       (pathInSource: string, destinationUrl: URL, value: unknown) =>
         (value instanceof classConstructor) &&
         this.canStoreValue(pathInSource, destinationUrl, value),
     );
-  }
-}
-
-export class FluentValueStorageHandler
-  extends AbstractFluentValueStorageHandler<ValueStorageHandler> {
-  static newHandler(
-    handler: ValueStorageHandler,
-    nameOrCondition?: string | conditionFn,
-  ): ValueStorageHandler & FluentHandler<ValueStorageHandler> {
-    return Object.freeze(
-      new FluentValueStorageHandler(handler, nameOrCondition),
-    );
-  }
-
-  protected override newInnerHandler(
-    handler: ValueStorageHandler,
-    nameOrCondition?: string | conditionFn,
-  ): ValueStorageHandler & FluentHandler<ValueStorageHandler> {
-    return Object.freeze(
-      new FluentValueStorageHandler(handler, nameOrCondition),
-    );
-  }
-
-  protected constructor(
-    handler: ValueStorageHandler,
-    nameOrCondition?: string | conditionFn,
-  ) {
-    super(handler, nameOrCondition);
-  }
-}
-
-export class FluentValueStorageHandlerWithHandlers
-  extends AbstractFluentValueStorageHandler<ValueStorageHandlerWithHandlers> {
-  readonly handlers: ValueStorageHandler[] = [];
-
-  static newHandler(
-    handler: ValueStorageHandlerWithHandlers,
-    nameOrCondition?: string | conditionFn,
-  ):
-    & ValueStorageHandlerWithHandlers
-    & FluentHandler<ValueStorageHandlerWithHandlers> {
-    return Object.freeze(
-      new FluentValueStorageHandlerWithHandlers(handler, nameOrCondition),
-    );
-  }
-
-  protected override newInnerHandler(
-    handler: ValueStorageHandlerWithHandlers,
-    nameOrCondition?: string | conditionFn,
-  ):
-    & ValueStorageHandlerWithHandlers
-    & FluentHandler<ValueStorageHandlerWithHandlers> {
-    return Object.freeze(
-      new FluentValueStorageHandlerWithHandlers(handler, nameOrCondition),
-    );
-  }
-
-  protected constructor(
-    handler: ValueStorageHandlerWithHandlers,
-    nameOrCondition?: string | conditionFn,
-  ) {
-    super(handler, nameOrCondition);
   }
 }

@@ -15,6 +15,7 @@
     "@std/assert": "jsr:@std/assert@^1.0.4",
     "@std/path": "jsr:@std/path@^1.0.8",
     "@types/picomatch": "npm:@types/picomatch@^3.0.1",
+    "fast-check": "npm:fast-check@^3.23.1",
     "picomatch": "npm:picomatch@^4.0.2"
   },
   "publish": {

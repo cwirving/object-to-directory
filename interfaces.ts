@@ -118,6 +118,15 @@ export interface ValueStorageHandlerOptions
    * By default, storage is best-effort and values that aren't covered by handlers are ignored.
    */
   strict?: boolean;
+
+  /**
+   * A string encoding function to apply when converting the name of a property in the input data to
+   * a path element in the URL of the destination file/directory. If not specified, defaults to `encodePathElement`.
+   *
+   * @param propertyName The name of the property in the input object.
+   * @returns The name to use as a path element.
+   */
+  propertyNameEncoder?: (propertyName: string) => string;
 }
 
 /**
@@ -172,28 +181,16 @@ export interface ValueStorageHandler {
 }
 
 /**
- * The specialization of {@linkcode ValueStorageHandler} for handlers that, themselves, have nested handlers.
+ * Extension of the value storage handler with a fluent API for convenience.
  */
-export interface ValueStorageHandlerWithHandlers extends ValueStorageHandler {
-  /**
-   * The nested handlers inside this one. The array can be manipulated to add/remove handlers.
-   *
-   * They should not be modified while this handler is storing a value.
-   */
-  readonly handlers: ValueStorageHandler[];
-}
-
-/**
- * Additional fluent functionality implemented by or on top of value storage handlers.
- */
-export interface FluentHandler<THandler> {
+export interface FluentHandler extends ValueStorageHandler {
   /**
    * Give the handler a name.
    *
    * @param name The new name for the handler.
    * @returns A new handler with the same behavior but with the new name.
    */
-  withName(name: string): THandler & FluentHandler<THandler>;
+  withName(name: string): FluentHandler;
 
   /**
    * Add a pattern-based path match pattern.
@@ -201,15 +198,23 @@ export interface FluentHandler<THandler> {
    * @param pattern The path matching pattern to add.
    * @returns A new handler with the existing behavior plus the additional path matching requirement.
    */
-  whenPathMatches(pattern: string): THandler & FluentHandler<THandler>;
+  whenPathMatches(pattern: string): FluentHandler;
 
   /**
-   * Add pattern-based path matching: the path in the source must match at least one of these patterns.
+   * Add pattern-based path matching: the path in the source must match **all** of these patterns.
+   *
+   * @param patterns An array of path matching patterns to match -- all patterns must match.
+   * @returns A new handler with the existing behavior plus the additional path matching requirement.
+   */
+  whenPathMatchesEvery(patterns: string[]): FluentHandler;
+
+  /**
+   * Add pattern-based path matching: the path in the source must match **at least one** of these patterns.
    *
    * @param patterns An array of path matching patterns to match -- at least one pattern must match.
    * @returns A new handler with the existing behavior plus the additional path matching requirement.
    */
-  whenPathMatchesSome(patterns: string[]): THandler & FluentHandler<THandler>;
+  whenPathMatchesSome(patterns: string[]): FluentHandler;
 
   /**
    * Add coarse JavaScript type matching using the `typeof` operator. The handler only can store values whose
@@ -227,7 +232,7 @@ export interface FluentHandler<THandler> {
       | "undefined"
       | "object"
       | "function",
-  ): THandler & FluentHandler<THandler>;
+  ): FluentHandler;
 
   /**
    * Add class instance  matching using the `instanceof` operator. The handler only can store values
@@ -237,6 +242,7 @@ export interface FluentHandler<THandler> {
    * @returns A new handler with the existing behavior plus the additional class instance matching requirement.
    */
   whenIsInstanceOf(
-    classConstructor: new () => unknown,
-  ): THandler & FluentHandler<THandler>;
+    // deno-lint-ignore no-explicit-any
+    classConstructor: new (..._: any[]) => unknown,
+  ): FluentHandler;
 }

@@ -4,6 +4,9 @@ import type {
 } from "./interfaces.ts";
 import { newDirectoryObjectStorageHandler } from "./factories.ts";
 
+export type * from "./interfaces.ts";
+export * from "./factories.ts";
+
 /**
  * Convenience wrapper around `newDirectoryObjectStorageHandler` and `storeValue`.
  *

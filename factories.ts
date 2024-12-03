@@ -4,14 +4,10 @@ import type {
   FluentHandler,
   ValueStorageHandler,
   ValueStorageHandlerOptions,
-  ValueStorageHandlerWithHandlers,
 } from "./interfaces.ts";
 import { platform } from "./platform.ts";
 import { DirectoryValueStorageHandler } from "./directory_storer.ts";
-import {
-  FluentValueStorageHandler,
-  FluentValueStorageHandlerWithHandlers,
-} from "./fluent_handlers.ts";
+import { FluentValueStorageHandler } from "./fluent_handlers.ts";
 
 /**
  * Create a new file writer appropriate for writing local files on the current platform.
@@ -43,7 +39,7 @@ export function newDirectoryCreator(): DirectoryCreator {
 export function newTextFileValueStorageHandler(
   textWriter: FileWriter,
   extension: string = ".txt",
-): ValueStorageHandler & FluentHandler<ValueStorageHandler> {
+): FluentHandler {
   return FluentValueStorageHandler.newHandler({
     name: "Text file value storage handler",
     canStoreValue(
@@ -86,7 +82,7 @@ export function newTextFileValueStorageHandler(
 export function newBinaryFileValueLoader(
   binaryWriter: FileWriter,
   extension: string = ".bin",
-): ValueStorageHandler & FluentHandler<ValueStorageHandler> {
+): FluentHandler {
   return FluentValueStorageHandler.newHandler({
     name: "Binary file value storage handler",
     canStoreValue(
@@ -146,7 +142,7 @@ export function newStringSerializerValueStorageHandler(
   serializer: StringifyFunc,
   extension: string,
   name: string,
-): ValueStorageHandler & FluentHandler<ValueStorageHandler> {
+): FluentHandler {
   return FluentValueStorageHandler.newHandler({
     name: name,
     canStoreValue(
@@ -182,30 +178,47 @@ export function newStringSerializerValueStorageHandler(
  */
 export function newJsonValueStorageHandler(
   textWriter: FileWriter,
-): ValueStorageHandler {
+): FluentHandler {
   return newStringSerializerValueStorageHandler(
     textWriter,
-    JSON.stringify,
+    (v) => {
+      return JSON.stringify(v, null, 2);
+    },
     ".json",
     "JSON file value storage handler",
   );
 }
 
+/**
+ * Create a new directory object storage handler -- this handler write object contents to directories in the file
+ * system, delegating to other handlers for the actual storage of the object's properties.
+ *
+ * Directory value storage handlers only respond to `canStoreValue` when the value is an object.
+ *
+ * The handlers are evaluated in order when processing each property in the object to store. If a handler's
+ * `canStoreValue` method returns `true` for a property, it will be used to store the value. If not handler can store
+ * an object-valued property, the directory object storage handler will recursively store that value, too. Remaining
+ * non-object values cause an error to be raised or are either ignored, depending on the value of the
+ * {@linkcode ValueStorageHandlerOptions.strict} option.
+ *
+ * @param handlers Handlers to use at runtime. This iterable is cloned immediately, so no further mutations will be observed.
+ * @param directoryCreator The directory creator to use. If none is specified, uses {@linkcode newDirectoryCreator} to create one.
+ * @param name The optional name of the handler.
+ * @param defaultOptions Options that will be merged with those provided at runtime in {@linkcode ValueStorageHandler.storeValue} calls.
+ */
 export function newDirectoryObjectStorageHandler(
   handlers: Iterable<ValueStorageHandler>,
   directoryCreator?: DirectoryCreator,
   name?: string,
   defaultOptions?: Readonly<ValueStorageHandlerOptions>,
-):
-  & ValueStorageHandlerWithHandlers
-  & FluentHandler<ValueStorageHandlerWithHandlers> {
+): FluentHandler {
   const handlersCopy = Array.from(handlers);
 
   if (!directoryCreator) {
     directoryCreator = newDirectoryCreator();
   }
 
-  return FluentValueStorageHandlerWithHandlers.newHandler(
+  return FluentValueStorageHandler.newHandler(
     new DirectoryValueStorageHandler(
       name ?? "Directory value storage handler",
       handlersCopy,

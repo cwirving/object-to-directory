@@ -3,20 +3,19 @@ import type {
   DirectoryCreator,
   ValueStorageHandler,
   ValueStorageHandlerOptions,
-  ValueStorageHandlerWithHandlers,
 } from "./interfaces.ts";
 import { isObject, mergeOptions } from "./merge_utilities.ts";
+import { encodePathElement } from "./path_encoder.ts";
 
-export class DirectoryValueStorageHandler
-  implements ValueStorageHandlerWithHandlers {
+export class DirectoryValueStorageHandler implements ValueStorageHandler {
   readonly #name: string;
-  readonly #handlers: ValueStorageHandler[];
+  readonly #handlers: Readonly<ValueStorageHandler[]>;
   readonly #directoryCreator: DirectoryCreator;
   readonly #defaultOptions: Readonly<ValueStorageHandlerOptions> | undefined;
 
   constructor(
     name: string,
-    handlers: ValueStorageHandler[],
+    handlers: Readonly<ValueStorageHandler[]>,
     directoryCreator: DirectoryCreator,
     defaultOptions?: Readonly<ValueStorageHandlerOptions>,
   ) {
@@ -28,10 +27,6 @@ export class DirectoryValueStorageHandler
 
   get name(): string {
     return this.#name;
-  }
-
-  get handlers(): ValueStorageHandler[] {
-    return this.#handlers;
   }
 
   canStoreValue(
@@ -56,17 +51,22 @@ export class DirectoryValueStorageHandler
 
     const directoryReference = new DirectoryReference(destinationUrl);
     const mergedOptions = mergeOptions(this.#defaultOptions, options);
+    const propertyNameEncoder = mergedOptions?.propertyNameEncoder ??
+      encodePathElement;
 
     // First things first, let's make sure the destination directory is created...
     await this.#directoryCreator.createDirectory(
       directoryReference.canonicalUrl,
+      { recursive: true },
     );
 
     for (const [nestedKey, nestedValue] of Object.entries(value)) {
       const nestedPathInSource = `${pathInSource}/${
-        nestedKey.replace("/", "%2F")
+        encodePathElement(nestedKey)
       }`;
-      const nestedDestinationUrl = directoryReference.getContentsUrl(nestedKey); // TODO: use a mapping function.
+      const nestedDestinationUrl = directoryReference.getContentsUrl(
+        encodeURIComponent(propertyNameEncoder(nestedKey)),
+      );
       let stored = false;
 
       for (const candidateHandler of this.#handlers) {

@@ -28,6 +28,6 @@ export function mergeOptions<T extends object>(
 export function isObject(
   candidate: unknown,
 ): candidate is Record<string, unknown> {
-  return typeof (candidate === "object") && (candidate !== null) &&
+  return (typeof candidate === "object") && (candidate !== null) &&
     !Array.isArray(candidate);
 }
