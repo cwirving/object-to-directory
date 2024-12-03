@@ -17,7 +17,7 @@ test("Can create fluent handlers", () => {
   assertEquals(fluentHandler.name, "FOO");
 });
 
-test("Can override names", () => {
+test("Fluent handler can override names", () => {
   const mockHandler = new MockValueStorageHandler("foo");
 
   const fluentHandler = FluentValueStorageHandler.newHandler(mockHandler);
@@ -30,6 +30,19 @@ test("Can override names", () => {
   assertEquals(renamedFluentHandler.name, "FOO");
   // Make sure it did not mutate the inner handler.
   assertEquals(fluentHandler.name, "foo");
+});
+
+test("Fluent handler passes storeValue() calls to inner handler", async () => {
+  const mockHandler = new MockValueStorageHandler("foo");
+
+  const fluentHandler = FluentValueStorageHandler.newHandler(mockHandler);
+  const tmpUrl = new URL("file:///tmp");
+  await fluentHandler.storeValue("/x", tmpUrl, { a: "b" }, { strict: true });
+
+  assertEquals(mockHandler.calls.storeValue.length, 1);
+  assertEquals(mockHandler.calls.storeValue[0].pathInSource, "/x");
+  assertEquals(mockHandler.calls.storeValue[0].destinationUrl, tmpUrl);
+  assertEquals(mockHandler.calls.storeValue[0].options, { strict: true });
 });
 
 test("Can add a path matching pattern", () => {
