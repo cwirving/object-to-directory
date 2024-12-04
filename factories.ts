@@ -1,7 +1,16 @@
+/**
+ * The various factory functions in this module serve as a more explicit way of creating value storage handlers
+ * and the types they depend on. These functions allow the caller to provide their own file system abstraction
+ * for complete control.
+ *
+ * @module
+ */
+
 import type {
   DirectoryCreator,
   FileWriter,
   FluentHandler,
+  StringifyFunc,
   ValueStorageHandler,
   ValueStorageHandlerOptions,
 } from "./interfaces.ts";
@@ -35,14 +44,16 @@ export function newDirectoryCreator(): DirectoryCreator {
  *
  * @param fileWriter  The file reader to perform the physical text file writing.
  * @param extension The file name extension (including the dot) to add to the path of the URL when writing files. Defaults to ".txt".
+ * @param name The name to give this storage handler (optional).
  * @returns An object implementing the {@linkcode ValueStorageHandler} interface that performs plain text file writing. If
  */
 export function newTextFileValueStorageHandler(
   fileWriter: FileWriter,
   extension: string = ".txt",
+  name: string = "Text file value storage handler",
 ): FluentHandler {
   return FluentValueStorageHandler.newHandler({
-    name: "Text file value storage handler",
+    name: name,
     canStoreValue(
       _pathInSource: string,
       _destinationUrl: URL,
@@ -78,14 +89,16 @@ export function newTextFileValueStorageHandler(
  *
  * @param fileWriter The file writer used to perform the physical binary file writing.
  * @param extension The file name extension (including the dot) to add to the path of the URL when writing files. Defaults to ".bin".
+ * @param name The name to give this storage handler (optional).
  * @returns An object implementing the {@linkcode ValueStorageHandler} interface.
  */
 export function newBinaryFileValueStorageHandler(
   fileWriter: FileWriter,
   extension: string = ".bin",
+  name: string = "Binary file value storage handler",
 ): FluentHandler {
   return FluentValueStorageHandler.newHandler({
-    name: "Binary file value storage handler",
+    name: name,
     canStoreValue(
       _pathInSource: string,
       _destinationUrl: URL,
@@ -130,27 +143,22 @@ export function newBinaryFileValueStorageHandler(
 }
 
 /**
- * The signature expected of string serializer functions passed to {@linkcode newStringSerializerValueStorageHandler} function.
- */
-export type StringifyFunc = (input: unknown) => string;
-
-/**
- * Create a new text file loader using an externally-provided parser function.
+ * Create a new text file loader using an externally-provided stringifier function.
  *
  * @param fileWriter  The underlying text file reader used to perform the physical file reading.
  * @param serializer The string parser function applied to the string loaded by the text file reader.
- * @param extension The extension to add to file name when saving it.
+ * @param extension The extension to add to file name when saving it. Defaults to no extension.
  * @param name The name to give the resulting file value loader.
  * @returns An object implementing the {@linkcode ValueStorageHandler} interface.
  */
-export function newStringSerializerValueStorageHandler(
+export function newCustomValueStorageHandler(
   fileWriter: FileWriter,
   serializer: StringifyFunc,
-  extension: string,
-  name: string,
+  extension: string = "",
+  name?: string,
 ): FluentHandler {
   return FluentValueStorageHandler.newHandler({
-    name: name,
+    name: name ?? `Custom value storage handler for extension "${extension}"`,
     canStoreValue(
       _pathInSource: string,
       _destinationUrl: URL,
@@ -181,13 +189,15 @@ export function newStringSerializerValueStorageHandler(
  *
  * @param fileWriter The underlying text file reader used to perform physical file reading.
  * @param prettified If true, the JSON is prettified using 2 spaces indentation.
+ * @param name The name to give this storage handler (optional).
  * @returns An object implementing the {@linkcode ValueStorageHandler} interface which reads and parses JSON files.
  */
 export function newJsonValueStorageHandler(
   fileWriter: FileWriter,
   prettified?: boolean,
+  name: string = "JSON file value storage handler",
 ): FluentHandler {
-  return newStringSerializerValueStorageHandler(
+  return newCustomValueStorageHandler(
     fileWriter,
     prettified
       ? (v) => {
@@ -195,7 +205,7 @@ export function newJsonValueStorageHandler(
       }
       : JSON.stringify,
     ".json",
-    "JSON file value storage handler",
+    name,
   );
 }
 

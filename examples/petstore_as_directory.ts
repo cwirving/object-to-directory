@@ -5,12 +5,11 @@ import petstore from "./petstore.json" with { type: "json" };
 
 const destinationUrl = new URL(import.meta.resolve("../tmp/petstore"));
 
-const fileWriter = otd.newFileWriter();
 const handlers: otd.ValueStorageHandler[] = [
   // Write the "openapi" value as its own file.
-  otd.newTextFileValueStorageHandler(fileWriter).whenPathMatches("/openapi"),
+  otd.handlers.textFile().whenPathMatches("/openapi"),
   // These are the path patterns we want to write out as JSON files.
-  otd.newJsonValueStorageHandler(fileWriter, true).whenPathMatchesSome([
+  otd.handlers.jsonFile({ prettified: true }).whenPathMatchesSome([
     "/components/schemas/*",
     "/info",
     "/paths/*",

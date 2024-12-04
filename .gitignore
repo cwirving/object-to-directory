@@ -184,3 +184,6 @@ examples/deno.lock
 
 # The directory where we'll be writing test temporary files
 /tmp
+
+# Local documentation builds
+/docs

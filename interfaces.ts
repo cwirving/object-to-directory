@@ -256,3 +256,45 @@ export interface FluentHandler extends ValueStorageHandler {
     classConstructor: new (..._: any[]) => unknown,
   ): FluentHandler;
 }
+
+/**
+ * The signature expected of string serializer functions passed to {@linkcode HandlerBuilder.customFile} method.
+ */
+export type StringifyFunc = (input: unknown) => string;
+
+export interface FileValueHandlerOptions {
+  extension?: string;
+  name?: string;
+}
+
+export interface JsonFileValueHandlerOptions extends FileValueHandlerOptions {
+  prettified?: boolean;
+}
+
+export interface CustomFileValueHandlerOptions extends FileValueHandlerOptions {
+  serializer: StringifyFunc;
+}
+
+export interface ObjectToDirectoryHandlerOptions {
+  handlers: Iterable<ValueStorageHandler>;
+  name?: string;
+  defaultOptions?: Readonly<ValueStorageHandlerOptions>;
+}
+
+export interface ArrayToDirectoryHandlerOptions
+  extends ObjectToDirectoryHandlerOptions {
+  keyProperty: string;
+}
+
+export interface HandlerBuilder {
+  textFile(options?: Readonly<FileValueHandlerOptions>): FluentHandler;
+  binaryFile(options?: Readonly<FileValueHandlerOptions>): FluentHandler;
+  jsonFile(options?: Readonly<JsonFileValueHandlerOptions>): FluentHandler;
+  customFile(options: Readonly<CustomFileValueHandlerOptions>): FluentHandler;
+  arrayToDirectory(
+    options: Readonly<ArrayToDirectoryHandlerOptions>,
+  ): FluentHandler;
+  objectToDirectory(
+    options: Readonly<ObjectToDirectoryHandlerOptions>,
+  ): FluentHandler;
+}
