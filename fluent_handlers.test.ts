@@ -122,6 +122,48 @@ test("Can add multiple matching patterns (in a logical OR)", () => {
   assertFalse(fhWithPaths.canStoreValue("x/y/z", someUrl, 42));
 });
 
+test("Can add an array type test", () => {
+  const mockHandler = new MockValueStorageHandler("foo");
+
+  mockHandler.defaultCanStoreValue = true;
+
+  const fluentHandler = FluentValueStorageHandler.newHandler(mockHandler);
+
+  assert(fluentHandler.canStoreValue("donut", someUrl, 42));
+
+  const fhWithIsArray = fluentHandler.whenIsArray();
+
+  // Not the hardcoded value
+  assertFalse(fhWithIsArray.canStoreValue("donut", someUrl, 42));
+
+  // But when the value type is correct (and the inner handler can store), we're good.
+  assert(fhWithIsArray.canStoreValue("x/y/z", someUrl, ["a", "b"]));
+
+  mockHandler.defaultCanStoreValue = false;
+  assertFalse(fhWithIsArray.canStoreValue("x/y/z", someUrl, ["a", "b"]));
+});
+
+test("Can add an object type test", () => {
+  const mockHandler = new MockValueStorageHandler("foo");
+
+  mockHandler.defaultCanStoreValue = true;
+
+  const fluentHandler = FluentValueStorageHandler.newHandler(mockHandler);
+
+  assert(fluentHandler.canStoreValue("donut", someUrl, 42));
+
+  const fhWithIsObject = fluentHandler.whenIsObject();
+
+  // Not the hardcoded value
+  assertFalse(fhWithIsObject.canStoreValue("donut", someUrl, 42));
+
+  // But when the value type is correct (and the inner handler can store), we're good.
+  assert(fhWithIsObject.canStoreValue("x/y/z", someUrl, { a: "b" }));
+
+  mockHandler.defaultCanStoreValue = false;
+  assertFalse(fhWithIsObject.canStoreValue("x/y/z", someUrl, { a: "b" }));
+});
+
 test("Can add a coarse type test", () => {
   const mockHandler = new MockValueStorageHandler("foo");
 

@@ -217,6 +217,16 @@ export interface FluentHandler extends ValueStorageHandler {
   whenPathMatchesSome(patterns: string[]): FluentHandler;
 
   /**
+   * Add a type matching condition that only matches array values.
+   */
+  whenIsArray(): FluentHandler;
+
+  /**
+   * Add a type matching condition that only matches object (excluding `null` and array) values.
+   */
+  whenIsObject(): FluentHandler;
+
+  /**
    * Add coarse JavaScript type matching using the `typeof` operator. The handler only can store values whose
    * type matches the argument.
    *

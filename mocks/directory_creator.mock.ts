@@ -1,4 +1,7 @@
-import type { DirectoryCreator, DirectoryCreatorOptions } from "../interfaces.ts";
+import type {
+  DirectoryCreator,
+  DirectoryCreatorOptions,
+} from "../interfaces.ts";
 
 export interface MockDirectoryCreatorCall {
   directoryUrl: URL;
@@ -14,8 +17,11 @@ export class MockDirectoryCreator implements DirectoryCreator {
     this.name = name;
   }
 
-  createDirectory(directoryUrl: URL, options?: Readonly<DirectoryCreatorOptions>): Promise<void> {
-    this.calls.push({directoryUrl, options});
+  createDirectory(
+    directoryUrl: URL,
+    options?: Readonly<DirectoryCreatorOptions>,
+  ): Promise<void> {
+    this.calls.push({ directoryUrl, options });
     return Promise.resolve();
   }
 }

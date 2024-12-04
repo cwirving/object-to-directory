@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "exports": "./mod.ts",
   "tasks": {
-    "check": "deno check *.ts",
-    "fmt": "deno fmt *.ts *.md",
-    "lint": "deno lint *.ts",
-    "test": "deno test --coverage --allow-read *.test.ts"
+    "check": "deno check *.ts mocks/*.ts && cd examples && deno task check",
+    "fmt": "deno fmt *.ts *.md mocks/*.ts && cd examples && deno task fmt",
+    "lint": "deno lint *.ts mocks/*.ts && cd examples && deno task lint",
+    "test": "deno test --coverage --allow-read --allow-write *.test.ts"
   },
   "license": "MIT",
   "imports": {
+    "@cross/fs": "jsr:@cross/fs@^0.1.11",
     "@cross/runtime": "jsr:@cross/runtime@^1.1.0",
     "@cross/test": "jsr:@cross/test@^0.0.9",
     "@std/assert": "jsr:@std/assert@^1.0.4",

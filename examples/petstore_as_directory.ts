@@ -1,5 +1,7 @@
-import petstore from "./petstore.json" with { type: "json" };
+import { assertEquals } from "@std/assert";
 import * as otd from "../mod.ts";
+import * as dto from "@scroogieboy/directory-to-object";
+import petstore from "./petstore.json" with { type: "json" };
 
 const destinationUrl = new URL(import.meta.resolve("../tmp/petstore"));
 
@@ -8,7 +10,7 @@ const handlers: otd.ValueStorageHandler[] = [
   // Write the "openapi" value as its own file.
   otd.newTextFileValueStorageHandler(fileWriter).whenPathMatches("/openapi"),
   // These are the path patterns we want to write out as JSON files.
-  otd.newJsonValueStorageHandler(fileWriter).whenPathMatchesSome([
+  otd.newJsonValueStorageHandler(fileWriter, true).whenPathMatchesSome([
     "/components/schemas/*",
     "/info",
     "/paths/*",
@@ -17,6 +19,7 @@ const handlers: otd.ValueStorageHandler[] = [
   // Any remaining objects will be written as directories.
 ];
 
+// Clean up the destination directory, if it exists.
 try {
   await Deno.remove(destinationUrl, { recursive: true });
 } catch (e) {
@@ -31,3 +34,11 @@ await otd.storeObjectToDirectory(destinationUrl, petstore, handlers, {
   strict: true,
   propertyNameEncoder: (name) => name.replaceAll("/", "／"),
 });
+
+// Use directory-to-object to load the OpenAPI spec back in, with the corresponding name decoding.
+const loadedPetstore = await dto.loadObjectFromDirectory(destinationUrl, {
+  propertyNameDecoder: (name: string) => name.replaceAll("／", "/"),
+});
+
+// The specs should be identical 😀.
+assertEquals(loadedPetstore, petstore);

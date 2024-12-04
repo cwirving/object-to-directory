@@ -4,6 +4,7 @@ import type {
   ValueStorageHandlerOptions,
 } from "./interfaces.ts";
 import picomatch from "picomatch";
+import { isObject } from "./merge_utilities.ts";
 
 type conditionFn = (
   pathInSource: string,
@@ -100,6 +101,24 @@ export class FluentValueStorageHandler implements FluentHandler {
       this,
       (pathInSource: string, destinationUrl: URL, value: unknown) =>
         matchers.some((m) => m(pathInSource)) &&
+        this.canStoreValue(pathInSource, destinationUrl, value),
+    );
+  }
+
+  whenIsArray(): FluentHandler {
+    return FluentValueStorageHandler.newHandler(
+      this,
+      (pathInSource: string, destinationUrl: URL, value: unknown) =>
+        Array.isArray(value) &&
+        this.canStoreValue(pathInSource, destinationUrl, value),
+    );
+  }
+
+  whenIsObject(): FluentHandler {
+    return FluentValueStorageHandler.newHandler(
+      this,
+      (pathInSource: string, destinationUrl: URL, value: unknown) =>
+        isObject(value) &&
         this.canStoreValue(pathInSource, destinationUrl, value),
     );
   }

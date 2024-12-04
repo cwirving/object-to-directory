@@ -1,7 +1,7 @@
 import type {
   ValueStorageHandler,
-  ValueStorageHandlerOptions
-} from '../interfaces.ts';
+  ValueStorageHandlerOptions,
+} from "../interfaces.ts";
 
 export interface MockValueStorageHandlerCall {
   pathInSource: string;
@@ -24,13 +24,27 @@ export class MockValueStorageHandler implements ValueStorageHandler {
     this.name = name;
   }
 
-  canStoreValue(pathInSource: string, destinationUrl: URL, value: unknown): boolean {
-    this.calls.canStoreValue.push({pathInSource, destinationUrl, value});
+  canStoreValue(
+    pathInSource: string,
+    destinationUrl: URL,
+    value: unknown,
+  ): boolean {
+    this.calls.canStoreValue.push({ pathInSource, destinationUrl, value });
     return this.defaultCanStoreValue;
   }
 
-  storeValue(pathInSource: string, destinationUrl: URL, value: unknown, options?: Readonly<ValueStorageHandlerOptions>): Promise<void> {
-    this.calls.storeValue.push({pathInSource, destinationUrl, value, options});
+  storeValue(
+    pathInSource: string,
+    destinationUrl: URL,
+    value: unknown,
+    options?: Readonly<ValueStorageHandlerOptions>,
+  ): Promise<void> {
+    this.calls.storeValue.push({
+      pathInSource,
+      destinationUrl,
+      value,
+      options,
+    });
     return Promise.resolve();
   }
 }

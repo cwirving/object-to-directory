@@ -1,0 +1,938 @@
+{
+  "SchemaVersion": 2,
+  "CreatedAt": "2024-12-04T10:21:07.137225-06:00",
+  "ArtifactName": "denoland/deno:distroless",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "OS": {
+      "Family": "debian",
+      "Name": "12.8"
+    },
+    "ImageID": "sha256:d0e688e075f409f059f8641d8c461ae3e047aa256ec2ab25b8fe51a4a3eb4d38",
+    "DiffIDs": [
+      "sha256:03af251906410714c5aef9fa705b63f6bbc39c4a5e787de7361eeb18886c2ed2",
+      "sha256:8fa10c0194df9b7c054c90dbe482585f768a54428fc90a5b78a0066a123b1bba",
+      "sha256:ddc6e550070ca022d94bd4415de20545ba69954033b4985045a8b05f538bbe5c",
+      "sha256:4d049f83d9cf21d1f5cc0e11deaf36df02790d0e60c1a3829538fb4b61685368",
+      "sha256:af5aa97ebe6ce1604747ec1e21af7136ded391bcabe4acef882e718a87c86bcc",
+      "sha256:6f1cdceb6a3146f0ccb986521156bef8a422cdbb0863396f7f751f575ba308f4",
+      "sha256:bbb6cacb8c82e4da4e8143e03351e939eab5e21ce0ef333c42e637af86c5217b",
+      "sha256:2a92d6ac9e4fcc274d5168b217ca4458a9fec6f094ead68d99c77073f08caac1",
+      "sha256:1a73b54f556b477f0a8b939d13c504a3b4f4db71f7a09c63afbc10acb3de5849",
+      "sha256:f4aee9e53c42a22ed82451218c3ea03d1eea8d6ca8fbe8eb4e950304ba8a8bb3",
+      "sha256:b336e209998fa5cf0eec3dabf93a21194198a35f4f75612d8da03693f8c30217",
+      "sha256:58dd21421eb66545ca617ed2f7259eeebcca2e8c9e8de3a56f3ec516145564bb",
+      "sha256:378aeea054577e1adaac0633c09c65139865864b2ec65748eddd61837e5af89f",
+      "sha256:b82d7f2804d3bff95452057dc9310a5b55e985e7c64e7785fa2594761c282f31",
+      "sha256:72b92cef5d1c6e8a1d3ac611f27aabd0cd27ee18a2a8482d0f883b8a1429c1ed",
+      "sha256:78110d1d980796ae9bfeb3871c21f7c46c8f2f502fa6cea94c8bd0bbd33bc41f",
+      "sha256:069aafd1e768c1859b890901779354bed75cdd4a4da3dae179b94a46ed1c5966",
+      "sha256:c5f4da9c9721ccccd3f5eb9f3598f8b243292ae7ddad464e3eb455c72eb4e6eb"
+    ],
+    "RepoTags": [
+      "denoland/deno:distroless"
+    ],
+    "RepoDigests": [
+      "denoland/deno@sha256:7c8318ab9f2008f519730fea791c779e1a4248cb95dd4b22fa2a5b0a4b2c192f"
+    ],
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2024-11-28T17:38:16.39498972Z",
+      "history": [
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z"
+        },
+        {
+          "created": "2024-11-28T17:38:16.280437022Z",
+          "created_by": "ENV DENO_DIR=/deno-dir/",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2024-11-28T17:38:16.280437022Z",
+          "created_by": "ENV DENO_INSTALL_ROOT=/usr/local",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2024-11-28T17:38:16.280437022Z",
+          "created_by": "ARG DENO_VERSION=2.1.2",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2024-11-28T17:38:16.280437022Z",
+          "created_by": "ENV DENO_VERSION=2.1.2",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2024-11-28T17:38:16.280437022Z",
+          "created_by": "COPY /deno /bin/deno # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2024-11-28T17:38:16.39498972Z",
+          "created_by": "COPY /tini /tini # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2024-11-28T17:38:16.39498972Z",
+          "created_by": "ENTRYPOINT [\"/tini\" \"--\" \"/bin/deno\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2024-11-28T17:38:16.39498972Z",
+          "created_by": "CMD [\"eval\" \"console.log('Welcome to Deno!')\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:03af251906410714c5aef9fa705b63f6bbc39c4a5e787de7361eeb18886c2ed2",
+          "sha256:8fa10c0194df9b7c054c90dbe482585f768a54428fc90a5b78a0066a123b1bba",
+          "sha256:ddc6e550070ca022d94bd4415de20545ba69954033b4985045a8b05f538bbe5c",
+          "sha256:4d049f83d9cf21d1f5cc0e11deaf36df02790d0e60c1a3829538fb4b61685368",
+          "sha256:af5aa97ebe6ce1604747ec1e21af7136ded391bcabe4acef882e718a87c86bcc",
+          "sha256:6f1cdceb6a3146f0ccb986521156bef8a422cdbb0863396f7f751f575ba308f4",
+          "sha256:bbb6cacb8c82e4da4e8143e03351e939eab5e21ce0ef333c42e637af86c5217b",
+          "sha256:2a92d6ac9e4fcc274d5168b217ca4458a9fec6f094ead68d99c77073f08caac1",
+          "sha256:1a73b54f556b477f0a8b939d13c504a3b4f4db71f7a09c63afbc10acb3de5849",
+          "sha256:f4aee9e53c42a22ed82451218c3ea03d1eea8d6ca8fbe8eb4e950304ba8a8bb3",
+          "sha256:b336e209998fa5cf0eec3dabf93a21194198a35f4f75612d8da03693f8c30217",
+          "sha256:58dd21421eb66545ca617ed2f7259eeebcca2e8c9e8de3a56f3ec516145564bb",
+          "sha256:378aeea054577e1adaac0633c09c65139865864b2ec65748eddd61837e5af89f",
+          "sha256:b82d7f2804d3bff95452057dc9310a5b55e985e7c64e7785fa2594761c282f31",
+          "sha256:72b92cef5d1c6e8a1d3ac611f27aabd0cd27ee18a2a8482d0f883b8a1429c1ed",
+          "sha256:78110d1d980796ae9bfeb3871c21f7c46c8f2f502fa6cea94c8bd0bbd33bc41f",
+          "sha256:069aafd1e768c1859b890901779354bed75cdd4a4da3dae179b94a46ed1c5966",
+          "sha256:c5f4da9c9721ccccd3f5eb9f3598f8b243292ae7ddad464e3eb455c72eb4e6eb"
+        ]
+      },
+      "config": {
+        "Cmd": [
+          "eval",
+          "console.log('Welcome to Deno!')"
+        ],
+        "Entrypoint": [
+          "/tini",
+          "--",
+          "/bin/deno"
+        ],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt",
+          "DENO_DIR=/deno-dir/",
+          "DENO_INSTALL_ROOT=/usr/local",
+          "DENO_VERSION=2.1.2"
+        ],
+        "User": "0",
+        "WorkingDir": "/",
+        "ArgsEscaped": true
+      }
+    }
+  },
+  "Results": [
+    {
+      "Target": "denoland/deno:distroless (debian 12.8)",
+      "Class": "os-pkgs",
+      "Type": "debian",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2010-4756",
+          "PkgID": "libc6@2.36-9+deb12u9",
+          "PkgName": "libc6",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libc6@2.36-9%2Bdeb12u9?arch=amd64\u0026distro=debian-12.8",
+            "UID": "e6c20a72996ea394"
+          },
+          "InstalledVersion": "2.36-9+deb12u9",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:701c983262e9aa33e628c7928b9351c0c69c5e2c6b37051d2e03ad6027c5bff6",
+            "DiffID": "sha256:58dd21421eb66545ca617ed2f7259eeebcca2e8c9e8de3a56f3ec516145564bb"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2010-4756",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "glibc: glob implementation can cause excessive CPU and memory consumption due to crafted glob expressions",
+          "Description": "The glob implementation in the GNU C Library (aka glibc or libc6) allows remote authenticated users to cause a denial of service (CPU and memory consumption) via crafted glob expressions that do not match any pathnames, as demonstrated by glob expressions in STAT commands to an FTP daemon, a different vulnerability than CVE-2010-2632.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-399"
+          ],
+          "VendorSeverity": {
+            "debian": 1,
+            "nvd": 2,
+            "redhat": 1
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
+              "V2Score": 4
+            },
+            "redhat": {
+              "V2Vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+              "V2Score": 5
+            }
+          },
+          "References": [
+            "http://cxib.net/stuff/glob-0day.c",
+            "http://securityreason.com/achievement_securityalert/89",
+            "http://securityreason.com/exploitalert/9223",
+            "https://access.redhat.com/security/cve/CVE-2010-4756",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=681681",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2010-4756",
+            "https://nvd.nist.gov/vuln/detail/CVE-2010-4756",
+            "https://www.cve.org/CVERecord?id=CVE-2010-4756"
+          ],
+          "PublishedDate": "2011-03-02T20:00:01.037Z",
+          "LastModifiedDate": "2021-09-01T12:15:07.193Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2018-20796",
+          "PkgID": "libc6@2.36-9+deb12u9",
+          "PkgName": "libc6",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libc6@2.36-9%2Bdeb12u9?arch=amd64\u0026distro=debian-12.8",
+            "UID": "e6c20a72996ea394"
+          },
+          "InstalledVersion": "2.36-9+deb12u9",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:701c983262e9aa33e628c7928b9351c0c69c5e2c6b37051d2e03ad6027c5bff6",
+            "DiffID": "sha256:58dd21421eb66545ca617ed2f7259eeebcca2e8c9e8de3a56f3ec516145564bb"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2018-20796",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "glibc: uncontrolled recursion in function check_dst_limits_calc_pos_1 in posix/regexec.c",
+          "Description": "In the GNU C Library (aka glibc or libc6) through 2.29, check_dst_limits_calc_pos_1 in posix/regexec.c has Uncontrolled Recursion, as demonstrated by '(\\227|)(\\\\1\\\\1|t1|\\\\\\2537)+' in grep.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-674"
+          ],
+          "VendorSeverity": {
+            "cbl-mariner": 3,
+            "debian": 1,
+            "nvd": 3,
+            "redhat": 2
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+              "V3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V2Score": 5,
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "http://www.securityfocus.com/bid/107160",
+            "https://access.redhat.com/security/cve/CVE-2018-20796",
+            "https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34141",
+            "https://lists.gnu.org/archive/html/bug-gnulib/2019-01/msg00108.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2018-20796",
+            "https://security.netapp.com/advisory/ntap-20190315-0002/",
+            "https://support.f5.com/csp/article/K26346590?utm_source=f5support\u0026amp%3Butm_medium=RSS",
+            "https://www.cve.org/CVERecord?id=CVE-2018-20796"
+          ],
+          "PublishedDate": "2019-02-26T02:29:00.45Z",
+          "LastModifiedDate": "2023-11-07T02:56:20.983Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2019-1010022",
+          "PkgID": "libc6@2.36-9+deb12u9",
+          "PkgName": "libc6",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libc6@2.36-9%2Bdeb12u9?arch=amd64\u0026distro=debian-12.8",
+            "UID": "e6c20a72996ea394"
+          },
+          "InstalledVersion": "2.36-9+deb12u9",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:701c983262e9aa33e628c7928b9351c0c69c5e2c6b37051d2e03ad6027c5bff6",
+            "DiffID": "sha256:58dd21421eb66545ca617ed2f7259eeebcca2e8c9e8de3a56f3ec516145564bb"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2019-1010022",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "glibc: stack guard protection bypass",
+          "Description": "GNU Libc current is affected by: Mitigation bypass. The impact is: Attacker may bypass stack guard protection. The component is: nptl. The attack vector is: Exploit stack buffer overflow vulnerability and use this bypass vulnerability to bypass stack guard. NOTE: Upstream comments indicate \"this is being treated as a non-security bug and no real threat.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-119"
+          ],
+          "VendorSeverity": {
+            "debian": 1,
+            "nvd": 4
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+              "V3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V2Score": 7.5,
+              "V3Score": 9.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2019-1010022",
+            "https://nvd.nist.gov/vuln/detail/CVE-2019-1010022",
+            "https://security-tracker.debian.org/tracker/CVE-2019-1010022",
+            "https://sourceware.org/bugzilla/show_bug.cgi?id=22850",
+            "https://sourceware.org/bugzilla/show_bug.cgi?id=22850#c3",
+            "https://ubuntu.com/security/CVE-2019-1010022",
+            "https://www.cve.org/CVERecord?id=CVE-2019-1010022"
+          ],
+          "PublishedDate": "2019-07-15T04:15:13.317Z",
+          "LastModifiedDate": "2024-08-05T03:15:25.083Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2019-1010023",
+          "PkgID": "libc6@2.36-9+deb12u9",
+          "PkgName": "libc6",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libc6@2.36-9%2Bdeb12u9?arch=amd64\u0026distro=debian-12.8",
+            "UID": "e6c20a72996ea394"
+          },
+          "InstalledVersion": "2.36-9+deb12u9",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:701c983262e9aa33e628c7928b9351c0c69c5e2c6b37051d2e03ad6027c5bff6",
+            "DiffID": "sha256:58dd21421eb66545ca617ed2f7259eeebcca2e8c9e8de3a56f3ec516145564bb"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2019-1010023",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "glibc: running ldd on malicious ELF leads to code execution because of wrong size computation",
+          "Description": "GNU Libc current is affected by: Re-mapping current loaded library with malicious ELF file. The impact is: In worst case attacker may evaluate privileges. The component is: libld. The attack vector is: Attacker sends 2 ELF files to victim and asks to run ldd on it. ldd execute code. NOTE: Upstream comments indicate \"this is being treated as a non-security bug and no real threat.",
+          "Severity": "LOW",
+          "VendorSeverity": {
+            "debian": 1,
+            "nvd": 3,
+            "redhat": 1
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+              "V3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V2Score": 6.8,
+              "V3Score": 8.8
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.0/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "V3Score": 7.8
+            }
+          },
+          "References": [
+            "http://www.securityfocus.com/bid/109167",
+            "https://access.redhat.com/security/cve/CVE-2019-1010023",
+            "https://nvd.nist.gov/vuln/detail/CVE-2019-1010023",
+            "https://security-tracker.debian.org/tracker/CVE-2019-1010023",
+            "https://sourceware.org/bugzilla/show_bug.cgi?id=22851",
+            "https://support.f5.com/csp/article/K11932200?utm_source=f5support\u0026amp%3Butm_medium=RSS",
+            "https://ubuntu.com/security/CVE-2019-1010023",
+            "https://www.cve.org/CVERecord?id=CVE-2019-1010023"
+          ],
+          "PublishedDate": "2019-07-15T04:15:13.397Z",
+          "LastModifiedDate": "2024-08-05T03:15:25.183Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2019-1010024",
+          "PkgID": "libc6@2.36-9+deb12u9",
+          "PkgName": "libc6",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libc6@2.36-9%2Bdeb12u9?arch=amd64\u0026distro=debian-12.8",
+            "UID": "e6c20a72996ea394"
+          },
+          "InstalledVersion": "2.36-9+deb12u9",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:701c983262e9aa33e628c7928b9351c0c69c5e2c6b37051d2e03ad6027c5bff6",
+            "DiffID": "sha256:58dd21421eb66545ca617ed2f7259eeebcca2e8c9e8de3a56f3ec516145564bb"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2019-1010024",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "glibc: ASLR bypass using cache of thread stack and heap",
+          "Description": "GNU Libc current is affected by: Mitigation bypass. The impact is: Attacker may bypass ASLR using cache of thread stack and heap. The component is: glibc. NOTE: Upstream comments indicate \"this is being treated as a non-security bug and no real threat.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-200"
+          ],
+          "VendorSeverity": {
+            "debian": 1,
+            "nvd": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+              "V3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+              "V2Score": 5,
+              "V3Score": 5.3
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "http://www.securityfocus.com/bid/109162",
+            "https://access.redhat.com/security/cve/CVE-2019-1010024",
+            "https://nvd.nist.gov/vuln/detail/CVE-2019-1010024",
+            "https://security-tracker.debian.org/tracker/CVE-2019-1010024",
+            "https://sourceware.org/bugzilla/show_bug.cgi?id=22852",
+            "https://support.f5.com/csp/article/K06046097",
+            "https://support.f5.com/csp/article/K06046097?utm_source=f5support\u0026amp%3Butm_medium=RSS",
+            "https://ubuntu.com/security/CVE-2019-1010024",
+            "https://www.cve.org/CVERecord?id=CVE-2019-1010024"
+          ],
+          "PublishedDate": "2019-07-15T04:15:13.473Z",
+          "LastModifiedDate": "2024-08-05T03:15:25.26Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2019-1010025",
+          "PkgID": "libc6@2.36-9+deb12u9",
+          "PkgName": "libc6",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libc6@2.36-9%2Bdeb12u9?arch=amd64\u0026distro=debian-12.8",
+            "UID": "e6c20a72996ea394"
+          },
+          "InstalledVersion": "2.36-9+deb12u9",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:701c983262e9aa33e628c7928b9351c0c69c5e2c6b37051d2e03ad6027c5bff6",
+            "DiffID": "sha256:58dd21421eb66545ca617ed2f7259eeebcca2e8c9e8de3a56f3ec516145564bb"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2019-1010025",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "glibc: information disclosure of heap addresses of pthread_created thread",
+          "Description": "GNU Libc current is affected by: Mitigation bypass. The impact is: Attacker may guess the heap addresses of pthread_created thread. The component is: glibc. NOTE: the vendor's position is \"ASLR bypass itself is not a vulnerability.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-330"
+          ],
+          "VendorSeverity": {
+            "debian": 1,
+            "nvd": 2,
+            "redhat": 1
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+              "V3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+              "V2Score": 5,
+              "V3Score": 5.3
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.0/AV:L/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+              "V3Score": 2.9
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2019-1010025",
+            "https://nvd.nist.gov/vuln/detail/CVE-2019-1010025",
+            "https://security-tracker.debian.org/tracker/CVE-2019-1010025",
+            "https://sourceware.org/bugzilla/show_bug.cgi?id=22853",
+            "https://support.f5.com/csp/article/K06046097",
+            "https://support.f5.com/csp/article/K06046097?utm_source=f5support\u0026amp%3Butm_medium=RSS",
+            "https://ubuntu.com/security/CVE-2019-1010025",
+            "https://www.cve.org/CVERecord?id=CVE-2019-1010025"
+          ],
+          "PublishedDate": "2019-07-15T04:15:13.537Z",
+          "LastModifiedDate": "2024-08-05T03:15:25.333Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2019-9192",
+          "PkgID": "libc6@2.36-9+deb12u9",
+          "PkgName": "libc6",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libc6@2.36-9%2Bdeb12u9?arch=amd64\u0026distro=debian-12.8",
+            "UID": "e6c20a72996ea394"
+          },
+          "InstalledVersion": "2.36-9+deb12u9",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:701c983262e9aa33e628c7928b9351c0c69c5e2c6b37051d2e03ad6027c5bff6",
+            "DiffID": "sha256:58dd21421eb66545ca617ed2f7259eeebcca2e8c9e8de3a56f3ec516145564bb"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2019-9192",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "glibc: uncontrolled recursion in function check_dst_limits_calc_pos_1 in posix/regexec.c",
+          "Description": "In the GNU C Library (aka glibc or libc6) through 2.29, check_dst_limits_calc_pos_1 in posix/regexec.c has Uncontrolled Recursion, as demonstrated by '(|)(\\\\1\\\\1)*' in grep, a different issue than CVE-2018-20796. NOTE: the software maintainer disputes that this is a vulnerability because the behavior occurs only with a crafted pattern",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-674"
+          ],
+          "VendorSeverity": {
+            "cbl-mariner": 3,
+            "debian": 1,
+            "nvd": 3,
+            "redhat": 1
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+              "V3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V2Score": 5,
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.0/AV:L/AC:L/PR:L/UI:R/S:U/C:N/I:N/A:L",
+              "V3Score": 2.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2019-9192",
+            "https://nvd.nist.gov/vuln/detail/CVE-2019-9192",
+            "https://sourceware.org/bugzilla/show_bug.cgi?id=24269",
+            "https://support.f5.com/csp/article/K26346590?utm_source=f5support\u0026amp%3Butm_medium=RSS",
+            "https://www.cve.org/CVERecord?id=CVE-2019-9192"
+          ],
+          "PublishedDate": "2019-02-26T18:29:00.34Z",
+          "LastModifiedDate": "2024-08-04T22:15:34.74Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2022-27943",
+          "PkgID": "libgcc-s1@12.2.0-14",
+          "PkgName": "libgcc-s1",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libgcc-s1@12.2.0-14?arch=amd64\u0026distro=debian-12.8",
+            "UID": "9adb191dee2086"
+          },
+          "InstalledVersion": "12.2.0-14",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:0cb5c07f8edd19d34444bcdceaa6039064787719b3b3c7cb3a8117c517032cb7",
+            "DiffID": "sha256:78110d1d980796ae9bfeb3871c21f7c46c8f2f502fa6cea94c8bd0bbd33bc41f"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2022-27943",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "binutils: libiberty/rust-demangle.c in GNU GCC 11.2 allows stack exhaustion in demangle_const",
+          "Description": "libiberty/rust-demangle.c in GNU GCC 11.2 allows stack consumption in demangle_const, as demonstrated by nm-new.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-674"
+          ],
+          "VendorSeverity": {
+            "amazon": 1,
+            "debian": 1,
+            "nvd": 2,
+            "redhat": 1,
+            "ubuntu": 1
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+              "V2Score": 4.3,
+              "V3Score": 5.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+              "V3Score": 5.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2022-27943",
+            "https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105039",
+            "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=1a770b01ef415e114164b6151d1e55acdee09371",
+            "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=9234cdca6ee88badfc00297e72f13dac4e540c79",
+            "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=fc968115a742d9e4674d9725ce9c2106b91b6ead",
+            "https://gcc.gnu.org/pipermail/gcc-patches/2022-March/592244.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/H424YXGW7OKXS2NCAP35OP6Y4P4AW6VG/",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-27943",
+            "https://sourceware.org/bugzilla/show_bug.cgi?id=28995",
+            "https://www.cve.org/CVERecord?id=CVE-2022-27943"
+          ],
+          "PublishedDate": "2022-03-26T13:15:07.9Z",
+          "LastModifiedDate": "2023-11-07T03:45:32.64Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2023-4039",
+          "PkgID": "libgcc-s1@12.2.0-14",
+          "PkgName": "libgcc-s1",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libgcc-s1@12.2.0-14?arch=amd64\u0026distro=debian-12.8",
+            "UID": "9adb191dee2086"
+          },
+          "InstalledVersion": "12.2.0-14",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:0cb5c07f8edd19d34444bcdceaa6039064787719b3b3c7cb3a8117c517032cb7",
+            "DiffID": "sha256:78110d1d980796ae9bfeb3871c21f7c46c8f2f502fa6cea94c8bd0bbd33bc41f"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2023-4039",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "gcc: -fstack-protector fails to guard dynamic stack allocations on ARM64",
+          "Description": "\n\n**DISPUTED**A failure in the -fstack-protector feature in GCC-based toolchains \nthat target AArch64 allows an attacker to exploit an existing buffer \noverflow in dynamically-sized local variables in your application \nwithout this being detected. This stack-protector failure only applies \nto C99-style dynamically-sized local variables or those created using \nalloca(). The stack-protector operates as intended for statically-sized \nlocal variables.\n\nThe default behavior when the stack-protector \ndetects an overflow is to terminate your application, resulting in \ncontrolled loss of availability. An attacker who can exploit a buffer \noverflow without triggering the stack-protector might be able to change \nprogram flow control to cause an uncontrolled loss of availability or to\n go further and affect confidentiality or integrity. NOTE: The GCC project argues that this is a missed hardening bug and not a vulnerability by itself.\n\n\n\n\n\n",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-693"
+          ],
+          "VendorSeverity": {
+            "amazon": 2,
+            "azure": 2,
+            "cbl-mariner": 2,
+            "debian": 1,
+            "nvd": 2,
+            "oracle-oval": 1,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:N",
+              "V3Score": 4.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2023-4039",
+            "https://developer.arm.com/Arm%20Security%20Center/GCC%20Stack%20Protector%20Vulnerability%20AArch64",
+            "https://gcc.gnu.org/git/?p=gcc.git;a=blob_plain;f=SECURITY.txt",
+            "https://gcc.gnu.org/pipermail/gcc-patches/2023-October/634066.html",
+            "https://github.com/metaredteam/external-disclosures/security/advisories/GHSA-x7ch-h5rf-w2mf",
+            "https://inbox.sourceware.org/gcc-patches/46cfa37b-56eb-344d-0745-e0d35393392d@gotplt.org",
+            "https://linux.oracle.com/cve/CVE-2023-4039.html",
+            "https://linux.oracle.com/errata/ELSA-2023-28766.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-4039",
+            "https://rtx.meta.security/mitigation/2023/09/12/CVE-2023-4039.html",
+            "https://www.cve.org/CVERecord?id=CVE-2023-4039"
+          ],
+          "PublishedDate": "2023-09-13T09:15:15.69Z",
+          "LastModifiedDate": "2024-08-02T08:15:14.993Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2022-27943",
+          "PkgID": "libgomp1@12.2.0-14",
+          "PkgName": "libgomp1",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libgomp1@12.2.0-14?arch=amd64\u0026distro=debian-12.8",
+            "UID": "b9060515663ac486"
+          },
+          "InstalledVersion": "12.2.0-14",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:6f971e93c4e27ad22ca1282ffc93145299d16f4d4771aecd572faf51d5dbcc7d",
+            "DiffID": "sha256:b82d7f2804d3bff95452057dc9310a5b55e985e7c64e7785fa2594761c282f31"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2022-27943",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "binutils: libiberty/rust-demangle.c in GNU GCC 11.2 allows stack exhaustion in demangle_const",
+          "Description": "libiberty/rust-demangle.c in GNU GCC 11.2 allows stack consumption in demangle_const, as demonstrated by nm-new.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-674"
+          ],
+          "VendorSeverity": {
+            "amazon": 1,
+            "debian": 1,
+            "nvd": 2,
+            "redhat": 1,
+            "ubuntu": 1
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+              "V2Score": 4.3,
+              "V3Score": 5.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+              "V3Score": 5.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2022-27943",
+            "https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105039",
+            "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=1a770b01ef415e114164b6151d1e55acdee09371",
+            "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=9234cdca6ee88badfc00297e72f13dac4e540c79",
+            "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=fc968115a742d9e4674d9725ce9c2106b91b6ead",
+            "https://gcc.gnu.org/pipermail/gcc-patches/2022-March/592244.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/H424YXGW7OKXS2NCAP35OP6Y4P4AW6VG/",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-27943",
+            "https://sourceware.org/bugzilla/show_bug.cgi?id=28995",
+            "https://www.cve.org/CVERecord?id=CVE-2022-27943"
+          ],
+          "PublishedDate": "2022-03-26T13:15:07.9Z",
+          "LastModifiedDate": "2023-11-07T03:45:32.64Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2023-4039",
+          "PkgID": "libgomp1@12.2.0-14",
+          "PkgName": "libgomp1",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libgomp1@12.2.0-14?arch=amd64\u0026distro=debian-12.8",
+            "UID": "b9060515663ac486"
+          },
+          "InstalledVersion": "12.2.0-14",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:6f971e93c4e27ad22ca1282ffc93145299d16f4d4771aecd572faf51d5dbcc7d",
+            "DiffID": "sha256:b82d7f2804d3bff95452057dc9310a5b55e985e7c64e7785fa2594761c282f31"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2023-4039",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "gcc: -fstack-protector fails to guard dynamic stack allocations on ARM64",
+          "Description": "\n\n**DISPUTED**A failure in the -fstack-protector feature in GCC-based toolchains \nthat target AArch64 allows an attacker to exploit an existing buffer \noverflow in dynamically-sized local variables in your application \nwithout this being detected. This stack-protector failure only applies \nto C99-style dynamically-sized local variables or those created using \nalloca(). The stack-protector operates as intended for statically-sized \nlocal variables.\n\nThe default behavior when the stack-protector \ndetects an overflow is to terminate your application, resulting in \ncontrolled loss of availability. An attacker who can exploit a buffer \noverflow without triggering the stack-protector might be able to change \nprogram flow control to cause an uncontrolled loss of availability or to\n go further and affect confidentiality or integrity. NOTE: The GCC project argues that this is a missed hardening bug and not a vulnerability by itself.\n\n\n\n\n\n",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-693"
+          ],
+          "VendorSeverity": {
+            "amazon": 2,
+            "azure": 2,
+            "cbl-mariner": 2,
+            "debian": 1,
+            "nvd": 2,
+            "oracle-oval": 1,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:N",
+              "V3Score": 4.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2023-4039",
+            "https://developer.arm.com/Arm%20Security%20Center/GCC%20Stack%20Protector%20Vulnerability%20AArch64",
+            "https://gcc.gnu.org/git/?p=gcc.git;a=blob_plain;f=SECURITY.txt",
+            "https://gcc.gnu.org/pipermail/gcc-patches/2023-October/634066.html",
+            "https://github.com/metaredteam/external-disclosures/security/advisories/GHSA-x7ch-h5rf-w2mf",
+            "https://inbox.sourceware.org/gcc-patches/46cfa37b-56eb-344d-0745-e0d35393392d@gotplt.org",
+            "https://linux.oracle.com/cve/CVE-2023-4039.html",
+            "https://linux.oracle.com/errata/ELSA-2023-28766.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-4039",
+            "https://rtx.meta.security/mitigation/2023/09/12/CVE-2023-4039.html",
+            "https://www.cve.org/CVERecord?id=CVE-2023-4039"
+          ],
+          "PublishedDate": "2023-09-13T09:15:15.69Z",
+          "LastModifiedDate": "2024-08-02T08:15:14.993Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2022-27943",
+          "PkgID": "libstdc++6@12.2.0-14",
+          "PkgName": "libstdc++6",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libstdc%2B%2B6@12.2.0-14?arch=amd64\u0026distro=debian-12.8",
+            "UID": "1a4537091b64347e"
+          },
+          "InstalledVersion": "12.2.0-14",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:c83c31ce41af06fcf7f4c2fa7ef77d0322082e8b29e43b6151966c887c287892",
+            "DiffID": "sha256:72b92cef5d1c6e8a1d3ac611f27aabd0cd27ee18a2a8482d0f883b8a1429c1ed"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2022-27943",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "binutils: libiberty/rust-demangle.c in GNU GCC 11.2 allows stack exhaustion in demangle_const",
+          "Description": "libiberty/rust-demangle.c in GNU GCC 11.2 allows stack consumption in demangle_const, as demonstrated by nm-new.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-674"
+          ],
+          "VendorSeverity": {
+            "amazon": 1,
+            "debian": 1,
+            "nvd": 2,
+            "redhat": 1,
+            "ubuntu": 1
+          },
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+              "V2Score": 4.3,
+              "V3Score": 5.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+              "V3Score": 5.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2022-27943",
+            "https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105039",
+            "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=1a770b01ef415e114164b6151d1e55acdee09371",
+            "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=9234cdca6ee88badfc00297e72f13dac4e540c79",
+            "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=fc968115a742d9e4674d9725ce9c2106b91b6ead",
+            "https://gcc.gnu.org/pipermail/gcc-patches/2022-March/592244.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/H424YXGW7OKXS2NCAP35OP6Y4P4AW6VG/",
+            "https://nvd.nist.gov/vuln/detail/CVE-2022-27943",
+            "https://sourceware.org/bugzilla/show_bug.cgi?id=28995",
+            "https://www.cve.org/CVERecord?id=CVE-2022-27943"
+          ],
+          "PublishedDate": "2022-03-26T13:15:07.9Z",
+          "LastModifiedDate": "2023-11-07T03:45:32.64Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2023-4039",
+          "PkgID": "libstdc++6@12.2.0-14",
+          "PkgName": "libstdc++6",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/debian/libstdc%2B%2B6@12.2.0-14?arch=amd64\u0026distro=debian-12.8",
+            "UID": "1a4537091b64347e"
+          },
+          "InstalledVersion": "12.2.0-14",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:c83c31ce41af06fcf7f4c2fa7ef77d0322082e8b29e43b6151966c887c287892",
+            "DiffID": "sha256:72b92cef5d1c6e8a1d3ac611f27aabd0cd27ee18a2a8482d0f883b8a1429c1ed"
+          },
+          "SeveritySource": "debian",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2023-4039",
+          "DataSource": {
+            "ID": "debian",
+            "Name": "Debian Security Tracker",
+            "URL": "https://salsa.debian.org/security-tracker-team/security-tracker"
+          },
+          "Title": "gcc: -fstack-protector fails to guard dynamic stack allocations on ARM64",
+          "Description": "\n\n**DISPUTED**A failure in the -fstack-protector feature in GCC-based toolchains \nthat target AArch64 allows an attacker to exploit an existing buffer \noverflow in dynamically-sized local variables in your application \nwithout this being detected. This stack-protector failure only applies \nto C99-style dynamically-sized local variables or those created using \nalloca(). The stack-protector operates as intended for statically-sized \nlocal variables.\n\nThe default behavior when the stack-protector \ndetects an overflow is to terminate your application, resulting in \ncontrolled loss of availability. An attacker who can exploit a buffer \noverflow without triggering the stack-protector might be able to change \nprogram flow control to cause an uncontrolled loss of availability or to\n go further and affect confidentiality or integrity. NOTE: The GCC project argues that this is a missed hardening bug and not a vulnerability by itself.\n\n\n\n\n\n",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-693"
+          ],
+          "VendorSeverity": {
+            "amazon": 2,
+            "azure": 2,
+            "cbl-mariner": 2,
+            "debian": 1,
+            "nvd": 2,
+            "oracle-oval": 1,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:N",
+              "V3Score": 4.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2023-4039",
+            "https://developer.arm.com/Arm%20Security%20Center/GCC%20Stack%20Protector%20Vulnerability%20AArch64",
+            "https://gcc.gnu.org/git/?p=gcc.git;a=blob_plain;f=SECURITY.txt",
+            "https://gcc.gnu.org/pipermail/gcc-patches/2023-October/634066.html",
+            "https://github.com/metaredteam/external-disclosures/security/advisories/GHSA-x7ch-h5rf-w2mf",
+            "https://inbox.sourceware.org/gcc-patches/46cfa37b-56eb-344d-0745-e0d35393392d@gotplt.org",
+            "https://linux.oracle.com/cve/CVE-2023-4039.html",
+            "https://linux.oracle.com/errata/ELSA-2023-28766.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2023-4039",
+            "https://rtx.meta.security/mitigation/2023/09/12/CVE-2023-4039.html",
+            "https://www.cve.org/CVERecord?id=CVE-2023-4039"
+          ],
+          "PublishedDate": "2023-09-13T09:15:15.69Z",
+          "LastModifiedDate": "2024-08-02T08:15:14.993Z"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "tasks": {
+    "check": "deno check *.ts",
+    "fmt": "deno fmt *.ts",
+    "lint": "deno fmt *.ts"
+  },
+  "imports": {
+    "@cross/runtime": "jsr:@cross/runtime@^1.1.0",
+    "@scroogieboy/directory-to-object": "jsr:@scroogieboy/directory-to-object@^0.5.3",
+    "@std/assert": "jsr:@std/assert@^1.0.4",
+    "@std/path": "jsr:@std/path@^1.0.8",
+    "json-2-csv": "npm:json-2-csv@^5.5.7",
+    "picomatch": "npm:picomatch@^4.0.2"
+  }
+}
