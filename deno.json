@@ -1,14 +1,15 @@
 {
   "name": "@scroogieboy/object-to-directory",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "exports": {
     ".": "./mod.ts",
     "./factories": "./factories.ts",
-    "./interfaces": "./interfaces.ts"
+    "./interfaces": "./interfaces.ts",
+    "./utility": "./utility.ts"
   },
   "tasks": {
     "check": "deno check *.ts mocks/*.ts && cd examples && deno task check",
-    "doc": "deno doc --html --output=docs mod.ts factories.ts interfaces.ts",
+    "doc": "deno doc --html --output=docs mod.ts factories.ts interfaces.ts utility.ts",
     "fmt": "deno fmt *.ts *.md mocks/*.ts && cd examples && deno task fmt",
     "lint": "deno lint *.ts mocks/*.ts && cd examples && deno task lint",
     "test": "deno test --coverage --allow-read --allow-write *.test.ts",

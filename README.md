@@ -10,12 +10,11 @@ to various formats (or directories) based on configuration.
 ## Concepts
 
 The central concept of this library is the value storage handler: an object
-implementing interface
-(`ValueStorageHandler`)[./doc/interfaces/~/ValueStorageHandler] whose
-responsibility it is to store a value in the file system. There are value
-storage handlers that write to files (e.g., text files, JSON files, etc.) and
-there are value storage handlers that write objects/arrays to directories by
-storing their individual properties/items within each directory.
+implementing interface {@linkcode ValueStorageHandler} whose responsibility it
+is to store a value in the file system. There are value storage handlers that
+write to files (e.g., text files, JSON files, etc.) and there are value storage
+handlers that write objects/arrays to directories by storing their individual
+properties/items within each directory.
 
 The value storage handlers can be created in a fluent fashion using the
 `Handlers` singleton. For example, in the Deno REPL:
@@ -62,15 +61,15 @@ configuration.
 
 ## API
 
-The (`storeObjectToDirectory`)[./doc/~/storeObjectToDirectory] function stores a
-JavaScript object to the file system as a directory. It relies on value storage
-handlers to guide how the various properties in the input object and their
-descendents are written to the file system.
+The {@linkcode storeObjectToDirectory} function stores a JavaScript object to
+the file system as a directory. It relies on value storage handlers to guide how
+the various properties in the input object and their descendents are written to
+the file system.
 
-The (`Handlers`)[./doc/~~/Handlers] singleton variable builder singleton is a
-convenient way to build handlers for `storeObjectToDirectory`. See the
-(`HandlerBuilder`)[./doc/interfaces/~~/HandlerBuilder] interface for a
-description of the various handlers that can be created through the builder.
+The {@linkcode Handlers} singleton variable builder singleton is a convenient
+way to build handlers for {@linkcode storeObjectToDirectory}. See the {@linkcode
+HandlerBuilder} interface for a description of the various handlers that can be
+created through the builder.
 
 ## Examples
 

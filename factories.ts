@@ -9,12 +9,9 @@
  * The {@linkcode newDirectoryCreator} function is a platform-neutral way of creating the directory creation abstraction
  * used throughout this library.
  *
- * The {@linkcode makeFluent} function is a convenient way to "upgrade" a simple {@linkcode ValueStorageHandler}
- * implementation to the full {@linkcode FluentHandler} interface by wrapping it in a fluent implementation.
- *
  * The {@linkcode DefaultHandlerBuilder} is the default implementation of the {@linkcode HandlerBuilder} interface.
- * It is initialized with a file writer and directory creator and is used to build all the handlers known to the
- * library.
+ * It is initialized with {@linkcode FileWriter} and {@linkcode DirectoryCreator}
+ * implementations. It is used to build all the handlers known to the library in a fluent way.
  *
  * @module
  */
@@ -29,12 +26,11 @@ import type {
   HandlerBuilder,
   JsonFileValueHandlerOptions,
   ObjectToDirectoryHandlerOptions,
-  ValueStorageHandler,
   ValueStorageHandlerOptions,
 } from "./interfaces.ts";
 import { platform } from "./platform.ts";
 import { DirectoryValueStorageHandler } from "./directory_storer.ts";
-import { FluentValueStorageHandler } from "./fluent_handlers.ts";
+import { makeFluent } from "./fluent_handlers.ts";
 import { isObject } from "./merge_utilities.ts";
 
 /**
@@ -65,20 +61,6 @@ export function newFileWriter(): FileWriter {
  */
 export function newDirectoryCreator(): DirectoryCreator {
   return platform.directoryCreator;
-}
-
-/**
- * Given an object implementing interface {@linkcode ValueStorageHandler}, wrap it in a {@linkcode FluentHandler}
- * implementation that makes it easier to build customized versions of the handler. The handler is only wrapped if it
- * is not already a fluent handler.
- *
- * @param handler The handler to make fluent.
- * @returns The handler itself, if it is already fluent, or a wrapper around the handler that makes it fluent.
- */
-export function makeFluent(handler: ValueStorageHandler): FluentHandler {
-  return (handler instanceof FluentValueStorageHandler)
-    ? handler
-    : FluentValueStorageHandler.newHandler(handler);
 }
 
 /**

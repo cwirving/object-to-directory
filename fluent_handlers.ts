@@ -153,3 +153,17 @@ export class FluentValueStorageHandler implements FluentHandler {
     );
   }
 }
+
+/**
+ * Given an object implementing interface {@linkcode ValueStorageHandler}, wrap it in a {@linkcode FluentHandler}
+ * implementation that makes it easier to build customized versions of the handler. The handler is only wrapped if it
+ * is not already a fluent handler.
+ *
+ * @param handler The handler to make fluent.
+ * @returns The handler itself, if it is already fluent, or a wrapper around the handler that makes it fluent.
+ */
+export function makeFluent(handler: ValueStorageHandler): FluentHandler {
+  return (handler instanceof FluentValueStorageHandler)
+    ? handler
+    : FluentValueStorageHandler.newHandler(handler);
+}

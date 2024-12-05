@@ -1,11 +1,24 @@
 /**
- * The interfaces that govern this library.
+ * The interfaces that underlie this library.
+ *
+ * The value storage handler interface that consumers generally work with is {@linkcode FluentHandler}, which enhances
+ * the core {@linkcode ValueStorageHandler} interface with fluent methods to build variations with additional
+ * constraints.
+ *
+ * The options passed to functions in the library are also described as interfaces. The most frequently used is
+ * {@linkcode ValueStorageHandlerOptions}, which are the options passed to the
+ * {@linkcode ValueStorageHandler.storeValue} method to control the storage behavior (e.g., to map property names
+ * to file names, etc.).
+ *
+ * The {@linkcode FileWriter} and {@linkcode DirectoryCreator} interfaces are the low-level abstractions over the
+ * underlying runtime platform. Deno and Node.js/Bun have implementations built into the library, but it is possible
+ * to write additional implementations over other file system-like media and use them with the library.
  *
  * @module
  */
 
 /**
- * Our own equivalent to the Node.js `Abortable` type. Unfortunately, the Deno and Node.js
+ * Our own equivalent to the Node.js `Abortable` interface. Unfortunately, the Deno and Node.js
  * `AbortSignal` types aren't completely identical, so using `Abortable` directly causes
  * type checking issues.
  */
@@ -75,7 +88,7 @@ export interface FileWriter {
 }
 
 /**
- * Options passed to the {@link DirectoryCreator} {@linkcode DirectoryCreator.createDirectory | createDirectory} method.
+ * Options passed to the {@linkcode DirectoryCreator} {@linkcode DirectoryCreator.createDirectory | createDirectory} method.
  */
 export interface DirectoryCreatorOptions extends WithOptionalSignal {
   /**
