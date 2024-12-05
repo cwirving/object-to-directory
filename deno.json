@@ -11,7 +11,9 @@
     "doc": "deno doc --html --output=docs mod.ts factories.ts interfaces.ts",
     "fmt": "deno fmt *.ts *.md mocks/*.ts && cd examples && deno task fmt",
     "lint": "deno lint *.ts mocks/*.ts && cd examples && deno task lint",
-    "test": "deno test --coverage --allow-read --allow-write *.test.ts"
+    "test": "deno test --coverage --allow-read --allow-write *.test.ts",
+    "test-bun": "cd node && ./run_bun_tests.sh",
+    "test-node": "cd node && ./run_node_tests.sh"
   },
   "license": "MIT",
   "imports": {

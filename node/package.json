@@ -1,0 +1,21 @@
+{
+  "name": "otd",
+  "module": "mod.ts",
+  "type": "module",
+  "dependencies": {
+    "@cross/runtime": "npm:@jsr/cross__runtime@^1.1.0",
+    "picomatch": "^4.0.2"
+  },
+  "devDependencies": {
+    "@cross/fs": "npm:@jsr/cross__fs@^0.1.11",
+    "@cross/test": "npm:@jsr/cross__test@^0.0.9",
+    "@std/assert": "npm:@jsr/std__assert@^1.0.4",
+    "@std/path": "npm:@jsr/std__path@^1.0.8",
+    "@types/node": "latest",
+    "fast-check": "^3.23.1",
+    "tsx": "^4.19.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
