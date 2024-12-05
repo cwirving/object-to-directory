@@ -23,18 +23,20 @@ Finally, it reads the directory structure back into memory using the
 
 ```typescript
 import { assertEquals } from "@std/assert";
-import * as otd from "@scroogieboy/object-to-directory";
-import * as dto from "@scroogieboy/directory-to-object";
+import {
+  Handlers,
+  storeObjectToDirectory,
+} from "@scroogieboy/object-to-directory";
+import { loadObjectFromDirectory } from "@scroogieboy/directory-to-object";
 import petstore from "./petstore.json" with { type: "json" };
 
 const destinationUrl = new URL(import.meta.resolve("../tmp/petstore"));
 
-const fileWriter = otd.newFileWriter();
-const handlers: otd.ValueStorageHandler[] = [
+const handlers = [
   // Write the "openapi" value as its own file.
-  otd.newTextFileValueStorageHandler(fileWriter).whenPathMatches("/openapi"),
+  Handlers.textFile().whenPathMatches("/openapi"),
   // These are the path patterns we want to write out as JSON files.
-  otd.newJsonValueStorageHandler(fileWriter).whenPathMatchesSome([
+  Handlers.jsonFile().whenPathMatchesSome([
     "/components/schemas/*",
     "/info",
     "/paths/*",
@@ -54,13 +56,13 @@ try {
 
 // Let's use a little Unicode trickery to make the paths look pretty: replace "/" with
 // the full-width solidus character, which is allowed in the file system.
-await otd.storeObjectToDirectory(destinationUrl, petstore, handlers, {
+await storeObjectToDirectory(destinationUrl, petstore, handlers, {
   strict: true,
   propertyNameEncoder: (name) => name.replaceAll("/", "／"),
 });
 
 // Use directory-to-object to load the OpenAPI spec back in, with the corresponding name decoding.
-const loadedPetstore = await dto.loadObjectFromDirectory(destinationUrl, {
+const loadedPetstore = await loadObjectFromDirectory(destinationUrl, {
   propertyNameDecoder: (name: string) => name.replaceAll("／", "/"),
 });
 
@@ -74,7 +76,7 @@ directory.
 Running this program will write the OpenAPI spec decomposed into multiple files:
 
 ```
-.
+tmp
 └── petstore
     ├── components
     │   └── schemas
@@ -101,35 +103,37 @@ for the actual CSV file writing.
 
 ```typescript
 import { json2csv } from "json-2-csv";
-import * as otd from "@scroogieboy/object-to-directory";
+import {
+  Handlers,
+  storeObjectToDirectory,
+} from "@scroogieboy/object-to-directory";
 import trivyOutput from "./trivy_output.json" with { type: "json" };
 
 const destinationUrl = new URL(import.meta.resolve("../tmp/trivy_output"));
 
-const fileWriter = otd.newFileWriter();
-
 // Let's roll our own CSV handler.
-const csvHandler = otd.newStringSerializerValueStorageHandler(
-  fileWriter,
-  (v) => Array.isArray(v) ? json2csv(v) : "",
-  ".csv",
-  "CSV Handler",
-);
+const csvHandler = Handlers.customFile({
+  serializer: (v) => Array.isArray(v) ? json2csv(v) : "",
+  extension: ".csv",
+  name: "CSV Handler",
+});
 
 // Set up the handlers for the "/Results" path -- we want to treat this path differently.
-const resultsHandlers: otd.ValueStorageHandler[] = [
+const resultsHandlers = [
   csvHandler.whenIsArray(),
-  otd.newTextFileValueStorageHandler(fileWriter),
+  Handlers.textFile(),
 ];
 
-const handlers: otd.ValueStorageHandler[] = [
+const handlers = [
   // Plain-text properties go to .txt files.
-  otd.newTextFileValueStorageHandler(fileWriter),
+  Handlers.textFile(),
   // The "Results" array property is written as a directory containing CSV files of vulnerabilities.
-  otd.newDirectoryArrayOfObjectsStorageHandler("Target", resultsHandlers)
-    .whenPathMatches("/Results"),
+  Handlers.arrayToDirectory({
+    keyProperty: "Target",
+    handlers: resultsHandlers,
+  }).whenPathMatches("/Results"),
   // Default to writing any other properties as JSON files.
-  otd.newJsonValueStorageHandler(fileWriter),
+  Handlers.jsonFile(),
 ];
 
 // Clean up the destination directory, if it exists.
@@ -143,13 +147,13 @@ try {
 
 // Let's write out a directory structure with the Trivy output broken out, including the
 // vulnerabilities as a CSV file.
-await otd.storeObjectToDirectory(destinationUrl, trivyOutput, handlers, {
+await storeObjectToDirectory(destinationUrl, trivyOutput, handlers, {
   strict: true,
 });
 ```
 
 ```
-.
+tmp
 └── trivy_output
     ├── ArtifactName.txt
     ├── ArtifactType.txt

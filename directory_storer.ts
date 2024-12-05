@@ -43,6 +43,8 @@ export class DirectoryValueStorageHandler implements ValueStorageHandler {
     value: unknown,
     options?: Readonly<ValueStorageHandlerOptions>,
   ): Promise<void> {
+    options?.signal?.throwIfAborted();
+
     if (!isObject(value)) {
       throw new TypeError(
         `Attempting to store non-object value at path "${pathInSource}" as a directory.`,

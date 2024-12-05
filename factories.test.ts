@@ -9,13 +9,13 @@ import {
 import * as fs from "@cross/fs";
 import { test } from "@cross/test";
 import {
-  newBinaryFileValueStorageHandler,
+  DefaultHandlerBuilder,
   newDirectoryCreator,
   newFileWriter,
-  newTextFileValueStorageHandler,
 } from "./factories.ts";
 import { MockFileWriter } from "./mocks/file_writer.mock.ts";
 import type { ValueStorageHandlerOptions } from "./interfaces.ts";
+import { MockDirectoryCreator } from "./mocks/directory_creator.mock.ts";
 
 const tmpUrl = new URL("file:///tmp/xyz");
 
@@ -74,11 +74,14 @@ test("newDirectoryCreator creates a working directory creator", async () => {
   await fs.rm(destinationDirUrl, { recursive: true });
 });
 
-test("newTextFileValueStorageHandler writes text files for strings (only)", async () => {
+test("HandlerBuilderImpl.textFile writes text files for strings (only)", async () => {
   const mockWriter = new MockFileWriter("x");
+  const mockDirectoryCreator = new MockDirectoryCreator("y");
+  const builder = new DefaultHandlerBuilder(mockWriter, mockDirectoryCreator);
   const options: ValueStorageHandlerOptions = {};
 
-  const txtHandler = newTextFileValueStorageHandler(mockWriter);
+  const txtHandler = builder.textFile();
+  assertExists(txtHandler.name);
   assert(txtHandler.canStoreValue("/foo", tmpUrl, "foo"));
   assertFalse(txtHandler.canStoreValue("/foo", tmpUrl, 42));
 
@@ -98,7 +101,8 @@ test("newTextFileValueStorageHandler writes text files for strings (only)", asyn
   assertEquals(mockWriter.calls.writeTextToFile[0].contents, "this is a test");
   assertStrictEquals(mockWriter.calls.writeTextToFile[0].options, options);
 
-  const fooHandler = newTextFileValueStorageHandler(mockWriter, ".foo");
+  const fooHandler = builder.textFile({ extension: ".foo", name: "xyz" });
+  assertEquals(fooHandler.name, "xyz");
   assert(fooHandler.canStoreValue("/foo", tmpUrl, "bar"));
   assertFalse(fooHandler.canStoreValue("/foo", tmpUrl, 42));
 
@@ -115,9 +119,12 @@ test("newTextFileValueStorageHandler writes text files for strings (only)", asyn
 
 test("newBinaryFileValueStorageHandler writes binary files for binary data", async () => {
   const mockWriter = new MockFileWriter("x");
+  const mockDirectoryCreator = new MockDirectoryCreator("y");
+  const builder = new DefaultHandlerBuilder(mockWriter, mockDirectoryCreator);
   const options: ValueStorageHandlerOptions = {};
 
-  const binHandler = newBinaryFileValueStorageHandler(mockWriter);
+  const binHandler = builder.binaryFile();
+  assertExists(binHandler.name);
   assert(binHandler.canStoreValue("/foo", tmpUrl, new Uint8Array(1)));
   assertFalse(binHandler.canStoreValue("/foo", tmpUrl, "foo"));
   assertFalse(binHandler.canStoreValue("/foo", tmpUrl, 42));
@@ -141,7 +148,8 @@ test("newBinaryFileValueStorageHandler writes binary files for binary data", asy
   const binaryArrayBuffer = new ArrayBuffer(12);
   const view32 = new Uint32Array(binaryArrayBuffer);
   view32[0] = 1234;
-  const fooHandler = newBinaryFileValueStorageHandler(mockWriter, ".foo");
+  const fooHandler = builder.binaryFile({ extension: ".foo", name: "abc" });
+  assertEquals(fooHandler.name, "abc");
   assert(fooHandler.canStoreValue("/foo", tmpUrl, binaryArrayBuffer));
   assertFalse(fooHandler.canStoreValue("/foo", tmpUrl, "bar"));
   assertFalse(fooHandler.canStoreValue("/foo", tmpUrl, 42));

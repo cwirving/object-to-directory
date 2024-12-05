@@ -1,4 +1,10 @@
 /**
+ * The interfaces that govern this library.
+ *
+ * @module
+ */
+
+/**
  * Our own equivalent to the Node.js `Abortable` type. Unfortunately, the Deno and Node.js
  * `AbortSignal` types aren't completely identical, so using `Abortable` directly causes
  * type checking issues.
@@ -266,7 +272,11 @@ export type StringifyFunc = (input: unknown) => string;
  * The signature expected of the custom `canStoreValue` implementation passed to the
  * {@linkcode HandlerBuilder.customFile} method.
  */
-export type CanStoreValueFunc = (pathInSource: string, destinationUrl: URL, value: unknown) => boolean;
+export type CanStoreValueFunc = (
+  pathInSource: string,
+  destinationUrl: URL,
+  value: unknown,
+) => boolean;
 
 /**
  * The common options passed to the file handler builder methods on interface {@linkcode HandlerBuilder}.
@@ -292,10 +302,10 @@ export interface FileValueHandlerOptions {
  */
 export interface JsonFileValueHandlerOptions extends FileValueHandlerOptions {
   /**
-   * Optionally prettify the output JSON. By default, the generated JSON is compact. If this option is
-   * true, the generated JSON will be prettified by including line breaks and indentation.
+   * Optionally output compact JSON. By default, the generated JSON is prettified by including line breaks and
+   * indentation.
    */
-  prettified?: boolean;
+  compact?: boolean;
 }
 
 /**
@@ -364,6 +374,7 @@ export interface HandlerBuilder {
    * Create a new text file value storage handler. This handler stores strings as plain text files.
    *
    * @param options The options to control the specifics of the handler.
+   * @returns An object implementing the {@linkcode FluentHandler} interface that performs plain text file writing.
    */
   textFile(options?: Readonly<FileValueHandlerOptions>): FluentHandler;
 
@@ -372,6 +383,7 @@ export interface HandlerBuilder {
    * `ArrayBufferView` values. No other value types are handled.
    *
    * @param options The options to control the specifics of the handler.
+   * @returns An object implementing the {@linkcode FluentHandler} interface that performs binary file writing.
    */
   binaryFile(options?: Readonly<FileValueHandlerOptions>): FluentHandler;
 
@@ -379,10 +391,11 @@ export interface HandlerBuilder {
    * Create a new JSON file value storage handler. This handler serializes values to JSON and
    * writes them to files.
    *
-   * The JSON defaults to a compact format, use the {@linkcode JsonFileValueHandlerOptions.prettified} option to
-   * enable a more human-friendly output format with line breaks and indentation.
+   * The JSON defaults to a prettified format with line breaks and indentation. Use the
+   * {@linkcode JsonFileValueHandlerOptions.compact} option to use a compact JSON format, instead.
    *
    * @param options The options to control the specifics of the handler.
+   * @returns An object implementing the {@linkcode FluentHandler} interface that performs JSON file writing.
    */
   jsonFile(options?: Readonly<JsonFileValueHandlerOptions>): FluentHandler;
 
@@ -391,15 +404,33 @@ export interface HandlerBuilder {
    * string to a file.
    *
    * @param options The parameters and options to control the specifics of the handler.
+   * @returns An object implementing the {@linkcode FluentHandler} interface that performs custom file writing.
    */
   customFile(options: Readonly<CustomFileValueHandlerOptions>): FluentHandler;
 
   /**
-   * Create a storage handler that stores arrays of objects as directories, where the name of each entry in the
+   * Create a storage handler that stores arrays of **objects** as directories, where the name of each entry in the
    * directory is derived from the contents of the corresponding object. The provided handlers are used to store
    * the items.
    *
+   * Array directory value storage handlers only respond to `canStoreValue` when the value is an array.
+   *
+   * The intent is to write out a directory where the array contents are stored as directories, each representing an
+   * object in the array. The name of each directory is taken from a property in the object. The
+   * {@linkcode ArrayToDirectoryHandlerOptions.keyProperty | keyProperty} parameter determines which property is used
+   * to name directory entries.
+   *
+   * If the array items are found not to be objects or not to contain the key property, the handler's `storeValue`
+   * method will reject with a `TypeError`.
+   *
+   * The handlers in the `options` parameter are evaluated in order when processing each property in the object to
+   * store. If a handler's `canStoreValue` method returns `true` for a property, it will be used to store the value.
+   * If no handler can store an object-valued property, the directory object storage handler will serve as the fallback,
+   * recursively storing that value. Remaining non-object values cause an error to be raised or are either ignored,
+   * depending on the value of the {@linkcode ValueStorageHandlerOptions.strict} option.
+   *
    * @param options The parameters and options to control the specifics of the handler.
+   * @returns An object implementing the {@linkcode FluentHandler} interface that stores arrays of objects as directories.
    */
   arrayToDirectory(
     options: Readonly<ArrayToDirectoryHandlerOptions>,
@@ -409,7 +440,16 @@ export interface HandlerBuilder {
    * Create a storage handler that stores objects as directories. Each directory entry corresponds to a property in
    * the value object. The provided handlers are used to store the items.
    *
+   * Directory value storage handlers only respond to `canStoreValue` when the value is an object.
+   *
+   * The handlers in the `options` parameter are evaluated in order when processing each property in the object to
+   * store. If a handler's `canStoreValue` method returns `true` for a property, it will be used to store the value.
+   * If no handler can store an object-valued property, the directory object storage handler will serve as the fallback,
+   * recursively storing that value. Remaining non-object values cause an error to be raised or are either ignored,
+   * depending on the value of the {@linkcode ValueStorageHandlerOptions.strict} option.
+   *
    * @param options The parameters and options to control the specifics of the handler.
+   * @returns An object implementing the {@linkcode FluentHandler} interface that stores objects as directories.
    */
   objectToDirectory(
     options: Readonly<ObjectToDirectoryHandlerOptions>,
