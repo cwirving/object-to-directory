@@ -1,11 +1,76 @@
 # Object-To-Directory
 
 This library is the reverse of
-(@scroogieboy/directory-to-object)[https://jsr.io/@scroogieboy/directory-to-object].
+[@scroogieboy/directory-to-object](https://jsr.io/@scroogieboy/directory-to-object).
 It makes it easy to write out the contents of a JavaScript object structure to
 the file system in a granular fashion: instead of writing a single JSON, YAML or
 other format file, the data is written to a directory, with properties written
 to various formats (or directories) based on configuration.
+
+## Concepts
+
+The central concept of this library is the value storage handler: an object
+implementing interface
+(`ValueStorageHandler`)[./doc/interfaces/~/ValueStorageHandler] whose
+responsibility it is to store a value in the file system. There are value
+storage handlers that write to files (e.g., text files, JSON files, etc.) and
+there are value storage handlers that write objects/arrays to directories by
+storing their individual properties/items within each directory.
+
+The value storage handlers can be created in a fluent fashion using the
+`Handlers` singleton. For example, in the Deno REPL:
+
+```
+> import * as otd from "jsr:@scroogieboy/object-to-directory";
+undefined
+> let x = otd.Handlers.textFile().whenPathMatches("**/*foo*").withName("foo handler")
+undefined
+> x.name
+"foo handler"
+```
+
+Value storage handlers have a simple interface: a `name` property, a method to
+determine if a value can be stored using the handler and a method to perform the
+storage.
+
+```typescript
+export interface ValueStorageHandler {
+  readonly name: string;
+
+  canStoreValue(
+    pathInSource: string,
+    destinationUrl: URL,
+    value: unknown,
+  ): boolean;
+
+  storeValue(
+    pathInSource: string,
+    destinationUrl: URL,
+    value: unknown,
+    options?: Readonly<ValueStorageHandlerOptions>,
+  ): Promise<void>;
+}
+```
+
+At runtime, as each property of an object to store is visited, the configured
+handlers are queried in order -- calling `canStoreValue` on each until one
+responds `true`. The property is then stored by calling the `storeValue` on the
+first handler that responded to the `canStoreValue` query.
+
+See the examples below for more concrete code that makes use of handler
+configuration.
+
+## API
+
+The (`storeObjectToDirectory`)[./doc/~/storeObjectToDirectory] function stores a
+JavaScript object to the file system as a directory. It relies on value storage
+handlers to guide how the various properties in the input object and their
+descendents are written to the file system.
+
+The (`Handlers`)[./doc/~~/Handlers] singleton variable builder singleton is a
+convenient way to build handlers for `storeObjectToDirectory`. See the
+(`HandlerBuilder`)[./doc/interfaces/~~/HandlerBuilder] interface for a
+description of the various handlers that can be created through the builder.
 
 ## Examples
 
