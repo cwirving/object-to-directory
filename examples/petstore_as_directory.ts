@@ -1,5 +1,8 @@
 import { assertEquals } from "@std/assert";
-import { Handlers, storeObjectToDirectory } from "../mod.ts";
+import {
+  Handlers,
+  storeObjectToDirectory,
+} from "@scroogieboy/object-to-directory";
 import { loadObjectFromDirectory } from "@scroogieboy/directory-to-object";
 import petstore from "./petstore.json" with { type: "json" };
 

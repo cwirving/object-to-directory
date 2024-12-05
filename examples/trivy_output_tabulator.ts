@@ -1,5 +1,8 @@
 import { json2csv } from "json-2-csv";
-import { Handlers, storeObjectToDirectory } from "../mod.ts";
+import {
+  Handlers,
+  storeObjectToDirectory,
+} from "@scroogieboy/object-to-directory";
 import trivyOutput from "./trivy_output.json" with { type: "json" };
 
 const destinationUrl = new URL(import.meta.resolve("../tmp/trivy_output"));
