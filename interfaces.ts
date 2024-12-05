@@ -258,42 +258,159 @@ export interface FluentHandler extends ValueStorageHandler {
 }
 
 /**
- * The signature expected of string serializer functions passed to {@linkcode HandlerBuilder.customFile} method.
+ * The signature expected of serializer functions passed to the {@linkcode HandlerBuilder.customFile} method.
  */
 export type StringifyFunc = (input: unknown) => string;
 
+/**
+ * The signature expected of the custom `canStoreValue` implementation passed to the
+ * {@linkcode HandlerBuilder.customFile} method.
+ */
+export type CanStoreValueFunc = (pathInSource: string, destinationUrl: URL, value: unknown) => boolean;
+
+/**
+ * The common options passed to the file handler builder methods on interface {@linkcode HandlerBuilder}.
+ *
+ * These apply to {@linkcode HandlerBuilder.textFile}, {@linkcode HandlerBuilder.binaryFile},
+ * {@linkcode HandlerBuilder.jsonFile}, and {@linkcode HandlerBuilder.customFile}.
+ */
 export interface FileValueHandlerOptions {
+  /**
+   * The file name extension to append to written files. If omitted, the handler will use to a
+   * format-appropriate default.
+   */
   extension?: string;
+
+  /**
+   * The optional name to give the handler. It is only informational and useful when debugging code with many handlers.
+   */
   name?: string;
 }
 
+/**
+ * The specific options for the {@linkcode HandlerBuilder.jsonFile} method.
+ */
 export interface JsonFileValueHandlerOptions extends FileValueHandlerOptions {
+  /**
+   * Optionally prettify the output JSON. By default, the generated JSON is compact. If this option is
+   * true, the generated JSON will be prettified by including line breaks and indentation.
+   */
   prettified?: boolean;
 }
 
+/**
+ * Options specific to the {@linkcode HandlerBuilder.customFile} method.
+ *
+ * Note that the {@linkcode CustomFileValueHandlerOptions.serializer | serializer} option is mandatory.
+ */
 export interface CustomFileValueHandlerOptions extends FileValueHandlerOptions {
+  /**
+   * The serializer (function that converts a value into a string) to use for this custom value storage handler.
+   */
   serializer: StringifyFunc;
+
+  /**
+   * Optional implementation of the {@linkcode ValueStorageHandler.canStoreValue} function for the custom value
+   * storage handler. If omitted, the `canStoreValue` method will always return `true`.
+   */
+  canStoreValue?: CanStoreValueFunc;
 }
 
+/**
+ * Options that apply to the directory-related builder methods: {@linkcode HandlerBuilder.arrayToDirectory} and
+ * {@linkcode HandlerBuilder.objectToDirectory}.
+ *
+ * Note that the {@linkcode ObjectToDirectoryHandlerOptions.handlers | handlers} option is mandatory.
+ */
 export interface ObjectToDirectoryHandlerOptions {
+  /**
+   * The handlers to consult when storing object contents. Required.
+   */
   handlers: Iterable<ValueStorageHandler>;
+
+  /**
+   * The optional name for the value storage handler. It is only informational and useful when debugging code with
+   * many handlers.
+   */
   name?: string;
+
+  /**
+   * Default options to merge with those provided by the caller in the handler's
+   * {@linkcode ValueStorageHandler.storeValue} implementation.
+   */
   defaultOptions?: Readonly<ValueStorageHandlerOptions>;
 }
 
+/**
+ * Options that apply specifically to the array to directory builder method:
+ * {@linkcode HandlerBuilder.arrayToDirectory}.
+ *
+ * Note that the {@linkcode ArrayToDirectoryHandlerOptions.keyProperty | keyProperty} option is mandatory.
+ */
 export interface ArrayToDirectoryHandlerOptions
   extends ObjectToDirectoryHandlerOptions {
+  /**
+   * The key of the property in array items that the handler will use to determine what to call each item as it
+   * is stored within a directory.
+   */
   keyProperty: string;
 }
 
+/**
+ * A fluent builder interface for creating value storage handlers handlers.
+ */
 export interface HandlerBuilder {
+  /**
+   * Create a new text file value storage handler. This handler stores strings as plain text files.
+   *
+   * @param options The options to control the specifics of the handler.
+   */
   textFile(options?: Readonly<FileValueHandlerOptions>): FluentHandler;
+
+  /**
+   * Create a new binary file value storage handler. The handler can store `Uint8Array`, `ArrayBuffer` and
+   * `ArrayBufferView` values. No other value types are handled.
+   *
+   * @param options The options to control the specifics of the handler.
+   */
   binaryFile(options?: Readonly<FileValueHandlerOptions>): FluentHandler;
+
+  /**
+   * Create a new JSON file value storage handler. This handler serializes values to JSON and
+   * writes them to files.
+   *
+   * The JSON defaults to a compact format, use the {@linkcode JsonFileValueHandlerOptions.prettified} option to
+   * enable a more human-friendly output format with line breaks and indentation.
+   *
+   * @param options The options to control the specifics of the handler.
+   */
   jsonFile(options?: Readonly<JsonFileValueHandlerOptions>): FluentHandler;
+
+  /**
+   * Create a storage handler that serializes values using a provided serializer function and writes the resulting
+   * string to a file.
+   *
+   * @param options The parameters and options to control the specifics of the handler.
+   */
   customFile(options: Readonly<CustomFileValueHandlerOptions>): FluentHandler;
+
+  /**
+   * Create a storage handler that stores arrays of objects as directories, where the name of each entry in the
+   * directory is derived from the contents of the corresponding object. The provided handlers are used to store
+   * the items.
+   *
+   * @param options The parameters and options to control the specifics of the handler.
+   */
   arrayToDirectory(
     options: Readonly<ArrayToDirectoryHandlerOptions>,
   ): FluentHandler;
+
+  /**
+   * Create a storage handler that stores objects as directories. Each directory entry corresponds to a property in
+   * the value object. The provided handlers are used to store the items.
+   *
+   * @param options The parameters and options to control the specifics of the handler.
+   */
   objectToDirectory(
     options: Readonly<ObjectToDirectoryHandlerOptions>,
   ): FluentHandler;

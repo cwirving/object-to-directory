@@ -7,6 +7,7 @@
  */
 
 import type {
+  CanStoreValueFunc,
   DirectoryCreator,
   FileWriter,
   FluentHandler,
@@ -143,28 +144,30 @@ export function newBinaryFileValueStorageHandler(
 }
 
 /**
- * Create a new text file loader using an externally-provided stringifier function.
+ * Create a new text file storage handler using an externally-provided stringifier function.
  *
  * @param fileWriter  The underlying text file reader used to perform the physical file reading.
- * @param serializer The string parser function applied to the string loaded by the text file reader.
+ * @param serializer The serialization function applied to value to produce the string written to storage.
+ * @param canStoreValue An optional implementation of the `canStoreValue` method for the resulting value storage handler.
  * @param extension The extension to add to file name when saving it. Defaults to no extension.
- * @param name The name to give the resulting file value loader.
+ * @param name The name to give the resulting value storage handler.
  * @returns An object implementing the {@linkcode ValueStorageHandler} interface.
  */
 export function newCustomValueStorageHandler(
   fileWriter: FileWriter,
   serializer: StringifyFunc,
+  canStoreValue?: CanStoreValueFunc,
   extension: string = "",
   name?: string,
 ): FluentHandler {
   return FluentValueStorageHandler.newHandler({
     name: name ?? `Custom value storage handler for extension "${extension}"`,
     canStoreValue(
-      _pathInSource: string,
-      _destinationUrl: URL,
-      _value: unknown,
+      pathInSource: string,
+      destinationUrl: URL,
+      value: unknown,
     ): boolean {
-      return true;
+      return canStoreValue? canStoreValue(pathInSource, destinationUrl, value) : true;
     },
     storeValue: (
       _pathInSource: string,
@@ -204,6 +207,7 @@ export function newJsonValueStorageHandler(
         return JSON.stringify(v, null, 2);
       }
       : JSON.stringify,
+    undefined,
     ".json",
     name,
   );

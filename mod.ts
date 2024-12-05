@@ -17,26 +17,27 @@ import type {
   ValueStorageHandler,
   ValueStorageHandlerOptions,
 } from "./interfaces.ts";
-import { newDirectoryObjectStorageHandler } from "./factories.ts";
 import { HandlerBuilderImpl } from "./handler_builder.ts";
 
 export type * from "./interfaces.ts";
 
 /**
- * Convenience wrapper around `newDirectoryObjectStorageHandler` and `storeValue`.
+ * Convenience wrapper around the handler builder in {@linkcode handlers} and the
+ * {@linkcode ValueStorageHandler.storeValue} directory storage handler method to write the contents
+ * of an object to a directory in one step.
  *
- * @param destinationUrl
- * @param value
- * @param handlers
- * @param options
+ * @param destinationUrl The destination in the file system of the directory to create, as a URL.
+ * @param value The object to store.
+ * @param valueHandlers The value storage handlers to consult when storing the properties in the object.
+ * @param options Options to control the specifics of the storage.
  */
 export function storeObjectToDirectory(
   destinationUrl: URL,
   value: Record<string, unknown>,
-  handlers: Iterable<ValueStorageHandler>,
+  valueHandlers: Iterable<ValueStorageHandler>,
   options?: Readonly<ValueStorageHandlerOptions>,
 ): Promise<void> {
-  const handler = newDirectoryObjectStorageHandler(handlers);
+  const handler = handlers.objectToDirectory({handlers: valueHandlers});
 
   return handler.storeValue("", destinationUrl, value, options);
 }

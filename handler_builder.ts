@@ -57,6 +57,7 @@ export class HandlerBuilderImpl implements HandlerBuilder {
     return newCustomValueStorageHandler(
       this.#fileWriter,
       options.serializer,
+      options.canStoreValue,
       options.extension,
       options.name,
     );

@@ -61,14 +61,14 @@ test("newDirectoryCreator creates a working directory creator", async () => {
 
   const destinationDirUrl = await cleanDestinationDirectory(false);
 
-  creator.createDirectory(destinationDirUrl);
+  await creator.createDirectory(destinationDirUrl);
   assert(fs.isDir(destinationDirUrl.pathname));
 
   const nestedDirUrl = new URL("tmp/a/b/c", destinationDirUrl);
   // We can't create the nested directory without the "recursive option"
   await assertRejects(() => creator.createDirectory(nestedDirUrl));
   // But it should work when it is set to true.
-  creator.createDirectory(nestedDirUrl, { recursive: true });
+  await creator.createDirectory(nestedDirUrl, { recursive: true });
   assert(fs.isDir(nestedDirUrl.pathname));
 
   await fs.rm(destinationDirUrl, { recursive: true });
