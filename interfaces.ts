@@ -374,9 +374,9 @@ export interface ArrayToDirectoryHandlerOptions
   extends ObjectToDirectoryHandlerOptions {
   /**
    * The key of the property in array items that the handler will use to determine what to call each item as it
-   * is stored within a directory.
+   * is stored within a directory. If omitted, the handler will use the item's index as its name in the directory.
    */
-  keyProperty: string;
+  keyProperty?: string;
 }
 
 /**

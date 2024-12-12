@@ -31,7 +31,11 @@ import type {
 import { platform } from "./platform.ts";
 import { DirectoryValueStorageHandler } from "./directory_storer.ts";
 import { makeFluent } from "./fluent_handlers.ts";
-import { isObject } from "./merge_utilities.ts";
+import {
+  indexKeyExtractor,
+  type keyExtractorFunc,
+  parameterizedKeyExtractor,
+} from "./key_extractor.ts";
 
 /**
  * The prettified `JSON.stringify` form we use by default.
@@ -258,6 +262,8 @@ export class DefaultHandlerBuilder implements HandlerBuilder {
    * If the array items are found not to be objects or not to contain the key property, the handler's `storeValue`
    * method will reject with a `TypeError`.
    *
+   *  **Note:** In the case of sparse arrays, only the items with values will be written out.
+   *
    * The handlers are evaluated in order when processing each property in the object to store. If a handler's
    * `canStoreValue` method returns `true` for a property, it will be used to store the value. If no handler can store
    * an object-valued property, the directory object storage handler will recursively store that value, too. Remaining
@@ -271,6 +277,10 @@ export class DefaultHandlerBuilder implements HandlerBuilder {
     options: Readonly<ArrayToDirectoryHandlerOptions>,
   ): FluentHandler {
     const keyProperty = options.keyProperty;
+    const keyExtractor: keyExtractorFunc = (typeof keyProperty === "string")
+      ? (value: unknown, _index: number) =>
+        parameterizedKeyExtractor(keyProperty, value)
+      : indexKeyExtractor;
     const innerHandler = this.objectToDirectory(options);
 
     // Behind the scenes, all we're doing is transform the array into an object, then passing it to the
@@ -303,8 +313,8 @@ export class DefaultHandlerBuilder implements HandlerBuilder {
         }
 
         if (
-          !value.every((item) =>
-            isObject(item) && typeof item[keyProperty] === "string"
+          !value.every((item, index) =>
+            typeof keyExtractor(item, index) === "string"
           )
         ) {
           return Promise.reject(
@@ -315,7 +325,7 @@ export class DefaultHandlerBuilder implements HandlerBuilder {
         }
 
         const transformedValue = Object.fromEntries(
-          value.map((item) => [item[keyProperty], item]),
+          value.map((item, index) => [keyExtractor(item, index), item]),
         );
 
         return innerHandler.storeValue(
